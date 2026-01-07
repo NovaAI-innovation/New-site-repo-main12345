@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makayla Moon | Services</title>
+    <meta name="description" content="Explore the services offered by Makayla Moon - exclusive content, experiences, and more.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+    <!-- Age Verification Modal -->
+    <div id="age-modal" class="age-modal">
+        <div class="age-modal-content">
+            <h2>Age Verification</h2>
+            <p>This website contains content intended for adults only.</p>
+            <p>Please confirm you are 18 years or older to continue.</p>
+            <div class="age-modal-buttons">
+                <button id="age-confirm" class="btn btn-primary">I am 18+</button>
+                <button id="age-decline" class="btn btn-secondary">Exit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Makayla Moon</a>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li><a href="platforms.html" class="nav-link">Platforms</a></li>
+                <li><a href="https://pgcbgy-5r.myshopify.com/" target="_blank" rel="noopener noreferrer" class="nav-link">Shop</a></li>
+                <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+                <li><a href="etiquette.html" class="nav-link">Etiquette</a></li>
+                <li><a href="book.html" class="nav-link">Booking</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Services Section -->
+    <section id="services" class="gallery section">
+        <div class="container">
+            <h2 class="section-title centered">Services</h2>
+            <div class="title-underline centered"></div>
+            <p class="section-subtitle">Curated experiences designed for connection</p>
+
+            <!-- Service Offerings -->
+            <h3 class="services-category-title">Service Offerings</h3>
+            <p class="services-note">Consideration must be sent in full at time of booking</p>
+
+            <div class="services-grid">
+                <!-- Service Card -->
+                <div class="service-card service-card-horizontal">
+                    <h4 class="service-name">Meet & Greet</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">1 hour</span>
+                        <span class="service-price">$500</span>
+                    </div>
+                    <p class="service-description">Perfect for those looking for a brief encounter</p>
+                </div>
+
+                <div class="service-card">
+                    <h4 class="service-name">Stay Awhile</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">1.5 hours</span>
+                        <span class="service-price">$800</span>
+                    </div>
+                    <p class="service-description">Kick back & relax, tell me about your day, enjoy a complementary massage if that's your thing</p>
+                </div>
+
+                <div class="service-card service-card-featured">
+                    <div class="featured-badge">Recommended</div>
+                    <h4 class="service-name">The Ideal Rendezvous</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">2 hours</span>
+                        <span class="service-price">$900</span>
+                    </div>
+                    <p class="service-description">This is my preference for a first time meet. We can properly get to know each other over cocktails & have some fun without the rush!</p>
+                </div>
+
+                <div class="service-card">
+                    <h4 class="service-name">Call Me Baby</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">3 hours</span>
+                        <span class="service-price">$1,400</span>
+                    </div>
+                    <p class="service-description">Now we're talking. Wine me. Dine me. Tell me a secret.</p>
+                    <p class="service-note">*Dates 3 hours or longer must include a meal</p>
+                </div>
+
+                <div class="service-card">
+                    <h4 class="service-name">The Sweet Spot</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">4 hours</span>
+                        <span class="service-price">$1,800</span>
+                    </div>
+                    <p class="service-description">Take me out on the town! Need date ideas? I love planning itineraries. See my companionship about me.</p>
+                    <p class="service-note">*Dates longer than 3 hours must include a meal</p>
+                </div>
+
+                <div class="service-card">
+                    <h4 class="service-name">The Real Deal</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">6 hours</span>
+                        <span class="service-price">$2,700</span>
+                    </div>
+                    <p class="service-description">If you're booking this much time, you've likely had a taste already! Which means you understand that, at least with me, more is MORE! Let's make the day count.</p>
+                    <p class="service-note">*Dates longer than 3 hours must include a meal</p>
+                </div>
+
+                <div class="service-card">
+                    <h4 class="service-name">Day Soirée</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">8 Waking Hours</span>
+                        <span class="service-price">$3,600</span>
+                    </div>
+                    <p class="service-description">Itinerary example: art gallery, happy hour, dinner, a show, cocktails, and plenty of fun to be had in between!</p>
+                </div>
+
+                <div class="service-card">
+                    <h4 class="service-name">Day To Remember</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">14 Waking Hours</span>
+                        <span class="service-price">$4,400</span>
+                    </div>
+                    <p class="service-description">Itinerary example: A hiking/ski/museum day, spa, lunch & dinner, cocktails, and plenty of fun in between!</p>
+                </div>
+
+                <div class="service-card">
+                    <h4 class="service-name">Coffee or Cocktail Consultation</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">30 Minutes</span>
+                        <span class="service-price">$250</span>
+                    </div>
+                    <p class="service-description">This is perfect for the person that would like to meet me before our first lengthy encounter. The consult allows us to feel each other out and make small talk about our upcoming date. Perhaps we may discuss any lingering details, get a little flirty, share in our excitement. If we hit it off, it may be hard to say goodbye. But think about it...wouldn't you rather I leave you wanting more? This is the perfect pre-date teaser!</p>
+                </div>
+            </div>
+
+            <!-- Extended Stays -->
+            <h3 class="services-category-title">Extended Stays</h3>
+
+            <div class="services-grid">
+                <div class="service-card service-card-horizontal">
+                    <h4 class="service-name">Overnight</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">14 hours</span>
+                        <span class="service-price">$4,400</span>
+                    </div>
+                </div>
+
+                <div class="service-card service-card-horizontal">
+                    <h4 class="service-name">Full Night & Day</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">24 hours</span>
+                        <span class="service-price">$5,000</span>
+                    </div>
+                </div>
+
+                <div class="service-card service-card-horizontal">
+                    <h4 class="service-name">Weekend</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">48 Hours</span>
+                        <span class="service-price">$6,000</span>
+                    </div>
+                </div>
+
+                <div class="service-card service-card-horizontal">
+                    <h4 class="service-name">Three Days</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">3 Days</span>
+                        <span class="service-price">$8,000</span>
+                    </div>
+                </div>
+
+                <div class="service-card service-card-horizontal">
+                    <h4 class="service-name">Four Days</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">4 Days</span>
+                        <span class="service-price">$9,500</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Travel Services -->
+            <h3 class="services-category-title">Travel</h3>
+            <p class="services-intro">Edmonton is my home base, but my heart loves to wander. I'd be thrilled to plan a getaway with you…or let our paths cross in your city! Let's see where the adventure takes us.</p>
+
+            <div class="services-grid">
+                <div class="service-card service-card-large">
+                    <h4 class="service-name">Drive Me To You</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">3 hour minimum</span>
+                        <span class="service-price">+$100-200</span>
+                    </div>
+                    <p class="service-description">Can't make it to Edmonton? No problem! I accept DMTYs within a 4 hour radius of Edmonton.</p>
+                    <ul class="service-list">
+                        <li>An additional $200 fee is added to the consideration to cover my driving time + travel expenses</li>
+                        <li>If your location is 1-2 hours from Edmonton, the additional fee is only $100</li>
+                        <li>You are responsible for providing an outcall location for us</li>
+                    </ul>
+                </div>
+
+                <div class="service-card service-card-large">
+                    <h4 class="service-name">Sponsored Tours</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">4 hour minimum</span>
+                    </div>
+                    <p class="service-description">Want me to visit your city? You can sponsor a tour! Book a 4 hour minimum date, and cover my travel costs to your city. I'll take care of lodging.</p>
+                </div>
+
+                <div class="service-card service-card-large">
+                    <h4 class="service-name">Fly Me To You</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">6 hour minimum</span>
+                        <span class="service-price">$1,800+</span>
+                    </div>
+                    <p class="service-description">Craving me all to yourself but not in Edmonton? Consider a FMTY! I'll happily come to you for an exclusive rendezvous.</p>
+                    <ul class="service-list">
+                        <li>Domestic FMTYs require my regular consideration, flight, and lodging (if separate lodging is needed for discretion)</li>
+                        <li>International FMTYs require my regular consideration + $1,500 for travel & expenses + lodging (if separate lodging is needed for discretion)</li>
+                        <li>International FMTYs are only offered to my established & trusted clients only. If we are new to each other, let's hope our schedules align during one of my international tours!</li>
+                    </ul>
+                </div>
+
+                <div class="service-card service-card-large">
+                    <h4 class="service-name">Travel Together</h4>
+                    <p class="service-description">For my established & trusted clients, I cannot think of a better way to spend our time than traveling to new places together. Let's lose ourselves in Patagonia's peaks, bathe under the spanish sun, drift away on an alaskan cruise, gawk at the gothic architecture of France. The world is ours &lt;3</p>
+                </div>
+
+                <div class="service-card service-card-large">
+                    <h4 class="service-name">A Special FMTY Offering</h4>
+                    <p class="service-description">I adore a rhythm of connection & solitude on longer trips—if you do too, keep reading.</p>
+                    <p class="service-description">If there's a dreamy destination you'd love to take me (what a generous, adventurous suitor you are!), I'm all about co-creating our ideal experience. Want 2 days together, 3 days apart, then 2 more together? I'm happy to count that as a 4-day booking, not 7.</p>
+                    <ul class="service-list">
+                        <li>Note: I would cover my own lodging and expenses on our solo days</li>
+                        <li>Those solo days? Maybe you're off on a silent hike, I'm deep in a retreat, or we're reconnecting with friends</li>
+                        <li>Why do I offer this? Because connection shouldn't come with the pressure to be joined at the hip. Time apart can be just as nourishing as time together</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Remote Services -->
+            <h3 class="services-category-title">Remote Services</h3>
+
+            <div class="services-grid">
+                <div class="service-card service-card-horizontal">
+                    <h4 class="service-name">Phone Date</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">1 Hour</span>
+                        <span class="service-price">$300</span>
+                    </div>
+                    <p class="service-description">Miss me? Want to chat & get a little flirty over a phone or video call? I'm waiting.</p>
+                </div>
+
+                <div class="service-card service-card-large">
+                    <h4 class="service-name">Texting Subscription</h4>
+                    <div class="service-meta">
+                        <span class="service-duration">30 days</span>
+                        <span class="service-price">$350</span>
+                    </div>
+                    <p class="service-description">This texting offering is designed for my established clients who crave a little connection in between our in-person moments &lt;3</p>
+                    <p class="service-description">You'll receive at least two texts (or emails) daily from yours truly, for 30 days.</p>
+                    <ul class="service-list">
+                        <li>1 thoughtful message</li>
+                        <li>1 selfie</li>
+                        <li>Depending on my energy & availability, you might receive even more. But at the very least, expect a daily dose of ME in your inbox!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Policies -->
+            <h3 class="services-category-title">Deposits and Cancelations</h3>
+
+            <div class="service-card service-card-info">
+                <ul class="service-list">
+                    <li>20% deposit for local Edmonton bookings</li>
+                    <li>50% deposit for all domestic FMTY's</li>
+                    <li>Full pre-payment for international FMTYs</li>
+                    <li>On the rare occasion that I need to cancel our date, your deposit will be refunded in full</li>
+                    <li>Your deposit will not be refunded if you cancel within 24-48 hours of our date, but I can save & apply it to our next date if you'd like to reschedule</li>
+                    <li>50% of your deposit will be refunded if you cancel 3+ days before our scheduled date/trip. Or I can save & apply the rest to our next date if you'd like to reschedule</li>
+                </ul>
+            </div>
+
+            <!-- Details & Options -->
+            <h3 class="services-category-title">Details & Options</h3>
+
+            <div class="services-grid">
+                <div class="service-card">
+                    <h4 class="service-name">Customize Your Session</h4>
+                    <p class="service-description">If you did not see a timeframe that works for you on the list(s) above, just reach out! I am flexible.</p>
+                </div>
+
+                <div class="service-card service-card-horizontal">
+                    <h4 class="service-name">In-Date Extension</h4>
+                    <div class="service-meta">
+                        <span class="service-price">$400/hr</span>
+                    </div>
+                    <p class="service-description">If you're not ready for our date to end, we can extend our time together while in session (if I am available to do so)!</p>
+                </div>
+
+                <div class="service-card service-card-large">
+                    <h4 class="service-name">Incall</h4>
+                    <p class="service-description">A hotel incall is available for an additional deposit</p>
+                    <ul class="service-list">
+                        <li>$89-120 during day</li>
+                        <li>$180-250 at night</li>
+                        <li>Once we become trusted & established friends, an incall fee will not be necessary</li>
+                    </ul>
+                </div>
+
+                <div class="service-card service-card-horizontal">
+                    <h4 class="service-name">Couples</h4>
+                    <div class="service-meta"></div>
+                    <p class="service-description">I do date couples. Please reach out to me for more info.</p>
+                </div>
+
+                <div class="service-card service-card-horizontal">
+                    <h4 class="service-name">Duos</h4>
+                    <div class="service-meta"></div>
+                    <div style="flex: 1; margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 1px solid rgba(248, 152, 30, 0.2);">
+                        <p class="service-description" style="margin-bottom: var(--spacing-xs);">I do offer duos.</p>
+                        <p class="service-note" style="margin: 0;">*Disclaimers: the other provider must be bisexual and/or pansexual</p>
+                    </div>
+                </div>
+
+                <div class="service-card service-card-horizontal">
+                    <h4 class="service-name">Age Discretion</h4>
+                    <div class="service-meta"></div>
+                    <p class="service-description">I will not date anyone younger than 21 years old</p>
+                </div>
+            </div>
+
+            <!-- VIP Arrangements -->
+            <h3 class="services-category-title">VIP Arrangements</h3>
+
+            <div class="service-card service-card-info">
+                <p class="service-description">My VIP arrangement options are ideal for those who want to establish a deeper connection with me, on a more regular basis.</p>
+                <p class="service-description">Month-to-month basis (or quarterly), and prepaid in advance</p>
+                <p class="service-description">*Ask me for details</p>
+
+                <h5 style="color: var(--accent-gold); margin-top: var(--spacing-md); margin-bottom: var(--spacing-sm);">VIP Perks</h5>
+                <ul class="service-list">
+                    <li>More for your consideration</li>
+                    <li>Priority booking (I do not cancel bookings with other people, but your booking process is expedited)</li>
+                </ul>
+
+                <h5 style="color: var(--accent-gold); margin-top: var(--spacing-md); margin-bottom: var(--spacing-sm);">Policies Regarding VIP Packages</h5>
+                <ul class="service-list">
+                    <li>Packages must be pre-paid and are month-to-month (or quarterly)</li>
+                    <li>Packages are not reoccurring</li>
+                    <li>You cannot request a regular date prior to an arrangement, and then request your regular date be part of the VIP arrangement</li>
+                    <li>You have 30 days to use you VIP status</li>
+                    <li>However, if there is an emergency and you must cancel, I would be willing to extend by 7 days</li>
+                    <li>Refunds are not offered for any arrangement options</li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Makayla Moon Inc. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="etiquette.html">Terms of Service</a>
+                <a href="book.html">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <button class="lightbox-close" id="lightbox-close">&times;</button>
+        <button class="lightbox-nav lightbox-prev" id="lightbox-prev">&#8249;</button>
+        <button class="lightbox-nav lightbox-next" id="lightbox-next">&#8250;</button>
+        <img src="" alt="" id="lightbox-image">
+    </div>
+
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
