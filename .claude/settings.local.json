@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(grep:*)",
+      "Bash(for file in \"C:\\\\Users\\\\casey\\\\fs\\\\New-site-repo-main12345\\\\script.js\" \"C:\\\\Users\\\\casey\\\\fs\\\\New-site-repo-main12345\\\\cms.js\" \"C:\\\\Users\\\\casey\\\\fs\\\\New-site-repo-main12345\\\\gallery-api.js\" \"C:\\\\Users\\\\casey\\\\fs\\\\New-site-repo-main12345\\\\gallery-lightbox.js\" \"C:\\\\Users\\\\casey\\\\fs\\\\New-site-repo-main12345\\\\api-config.js\")",
+      "Bash(done)",
+      "Bash(cat:*)",
+      "Bash(ls:*)"
     ]
   }
 }

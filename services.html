@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
-<body>
+<body data-page="services">
     <!-- Age Verification Modal -->
     <div id="age-modal" class="age-modal">
         <div class="age-modal-content">
@@ -327,9 +327,9 @@
                 <div class="service-card service-card-horizontal">
                     <h4 class="service-name">Duos</h4>
                     <div class="service-meta"></div>
-                    <div style="flex: 1; margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 1px solid rgba(248, 152, 30, 0.2);">
-                        <p class="service-description" style="margin-bottom: var(--spacing-xs);">I do offer duos.</p>
-                        <p class="service-note" style="margin: 0;">*Disclaimers: the other provider must be bisexual and/or pansexual</p>
+                    <div class="service-payment-details">
+                        <p class="service-description service-description-compact">I do offer duos.</p>
+                        <p class="service-note service-note-compact">*Disclaimers: the other provider must be bisexual and/or pansexual</p>
                     </div>
                 </div>
 
@@ -348,13 +348,13 @@
                 <p class="service-description">Month-to-month basis (or quarterly), and prepaid in advance</p>
                 <p class="service-description">*Ask me for details</p>
 
-                <h5 style="color: var(--accent-gold); margin-top: var(--spacing-md); margin-bottom: var(--spacing-sm);">VIP Perks</h5>
+                <h5 class="service-subtitle">VIP Perks</h5>
                 <ul class="service-list">
                     <li>More for your consideration</li>
                     <li>Priority booking (I do not cancel bookings with other people, but your booking process is expedited)</li>
                 </ul>
 
-                <h5 style="color: var(--accent-gold); margin-top: var(--spacing-md); margin-bottom: var(--spacing-sm);">Policies Regarding VIP Packages</h5>
+                <h5 class="service-subtitle">Policies Regarding VIP Packages</h5>
                 <ul class="service-list">
                     <li>Packages must be pre-paid and are month-to-month (or quarterly)</li>
                     <li>Packages are not reoccurring</li>
@@ -388,6 +388,6 @@
     </div>
 
     <!-- Main JavaScript -->
-    <script src="script.js"></script>
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
