@@ -3088,15 +3088,15 @@ button.btn {
 
 /* Stat card specific styles */
 .stat-card {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     flex-direction: row;
     align-items: center;
     gap: var(--spacing-md);
-    background: linear-gradient(135deg, var(--accent-gold-10), var(--black-60));
+    /* Uses base card background from .card class */
 }
 
 .stat-card-action {
-    background: linear-gradient(135deg, var(--black-60), var(--accent-gold-10));
+    /* Uses base card background from .card class */
     justify-content: center;
 }
 
@@ -3167,7 +3167,7 @@ button.btn {
     border-radius: 10px;
     padding: var(--spacing-xl);
     text-align: center;
-    background: var(--black-30);
+    /* Uses base card background from .card class */
     cursor: pointer;
     min-height: 300px;
     display: flex;
@@ -3180,7 +3180,7 @@ button.btn {
 .drop-zone:hover,
 .drop-zone.drag-over {
     border-color: var(--accent-gold);
-    background: var(--accent-gold-10);
+    /* Uses base card hover background effect */
 }
 
 .drop-zone-content {
@@ -3245,17 +3245,13 @@ button.btn {
 .file-preview-item,
 .card.file-preview-item {
     position: relative;
-    background: var(--black-60);
-    border: 2px solid var(--accent-gold-30);
-    border-radius: 10px;
+    /* Uses base card background from .card class */
+    /* Uses base card border from .card class */
+    /* Uses base card border-radius from .card class */
     overflow: hidden;
     display: flex;
     flex-direction: column;
     padding: 0;
-}
-
-.file-preview-item:hover {
-    /* Uses global hover animation from .card:hover */
 }
 
 .file-preview-item img {
@@ -3263,8 +3259,8 @@ button.btn {
     aspect-ratio: 1;
     object-fit: cover;
     background: var(--black-80);
+    border-radius: 10px 10px 0 0;
 }
-
 
 .file-preview-overlay {
     position: absolute;
@@ -3282,6 +3278,7 @@ button.btn {
     padding: var(--spacing-md);
     background: var(--black-80);
     border-top: 1px solid var(--accent-gold-20);
+    border-radius: 0 0 10px 10px;
 }
 
 .file-preview-caption-wrapper .emoji-picker-wrapper {
@@ -3504,11 +3501,11 @@ button.btn {
 /* CMS image card specific styles - extends base .card */
 .cms-image-card,
 .card.cms-image-card {
-    background: var(--black-60);
+    /* Uses base card background from .card class */
     padding: 0;
     cursor: move;
     flex-direction: column;
-    border: 2px solid var(--accent-gold-30);
+    /* Uses base card border from .card class */
 }
 
 .cms-image-card:hover {
@@ -3527,32 +3524,11 @@ button.btn {
 }
 
 .image-card-checkbox {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 10;
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    accent-color: var(--accent-gold);
+    display: none;
 }
 
 .image-card-drag-handle {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: var(--black-70);
-    color: var(--accent-gold);
-    padding: 0.4rem;
-    border-radius: 6px;
-    cursor: move;
-    z-index: 10;
-    font-size: 1.2rem;
-    opacity: 0;
-}
-
-.cms-image-card:hover .image-card-drag-handle {
-    opacity: 1;
+    display: none;
 }
 
 .image-card-preview {
@@ -3560,6 +3536,7 @@ button.btn {
     aspect-ratio: 1;
     overflow: hidden;
     background: var(--black-80);
+    border-radius: 10px 10px 0 0;
 }
 
 .image-card-preview img {
@@ -3572,6 +3549,7 @@ button.btn {
 .image-card-info {
     padding: var(--spacing-md);
     background: var(--black-80);
+    border-radius: 0 0 10px 10px;
 }
 
 .image-card-name {
