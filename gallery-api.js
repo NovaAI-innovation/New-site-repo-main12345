@@ -399,34 +399,38 @@ function createGalleryItem(image, index) {
 
 /**
  * Open lightbox with image (global function)
+ * This function is now handled by the optimized lightbox module (gallery-lightbox.js)
+ * Kept here for backward compatibility - the new lightbox will override this
  */
 window.openLightbox = function(imageUrl, imageIndex) {
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImage = document.getElementById('lightbox-image');
-    const lightboxCaption = document.getElementById('lightbox-caption');
+    // Use the optimized lightbox if available
+    if (window.Lightbox && typeof window.Lightbox.open === 'function') {
+        window.Lightbox.open(imageUrl, imageIndex, galleryState.allImages);
+    } else {
+        // Fallback to basic implementation if lightbox module not loaded
+        console.warn('Optimized lightbox not available, using fallback');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightbox-image');
+        const lightboxCaption = document.getElementById('lightbox-caption');
 
-    if (lightbox && lightboxImage) {
-        // Use full-size transformation for lightbox
-        const fullSizeUrl = generateCloudinaryUrl(imageUrl, 'full');
+        if (lightbox && lightboxImage) {
+            const fullSizeUrl = generateCloudinaryUrl(imageUrl, 'full');
+            lightboxImage.src = fullSizeUrl;
+            lightboxImage.alt = galleryState.allImages[imageIndex]?.caption || `Gallery image ${imageIndex + 1}`;
 
-        lightboxImage.src = fullSizeUrl;
-        lightboxImage.alt = galleryState.allImages[imageIndex]?.caption || `Gallery image ${imageIndex + 1}`;
-
-        // Show caption if available
-        if (lightboxCaption) {
-            if (galleryState.allImages[imageIndex]?.caption) {
-                lightboxCaption.textContent = galleryState.allImages[imageIndex].caption;
-                lightboxCaption.style.display = 'block';
-            } else {
-                lightboxCaption.style.display = 'none';
+            if (lightboxCaption) {
+                if (galleryState.allImages[imageIndex]?.caption) {
+                    lightboxCaption.textContent = galleryState.allImages[imageIndex].caption;
+                    lightboxCaption.style.display = 'block';
+                } else {
+                    lightboxCaption.style.display = 'none';
+                }
             }
+
+            lightbox.classList.add('active');
+            lightbox.dataset.currentIndex = imageIndex;
+            document.body.style.overflow = 'hidden';
         }
-
-        lightbox.classList.add('active');
-        lightbox.dataset.currentIndex = imageIndex;
-
-        // Prevent body scroll when lightbox is open
-        document.body.style.overflow = 'hidden';
     }
 };
 
