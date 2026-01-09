@@ -109,7 +109,50 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
     min-height: 100vh;
+}
+
+/* Center text in sections and containers, but exclude cards */
+.section,
+.container {
     text-align: center;
+}
+
+/* Override for cards - keep their intended alignment */
+.card,
+.service-card,
+.stat-card,
+.etiquette-section-card {
+    text-align: left;
+}
+
+/* Platform cards should remain centered */
+.platform-card {
+    text-align: center;
+}
+
+/* Centered cards should remain centered */
+.card-centered {
+    text-align: center;
+}
+
+/* Navigation should remain left-aligned */
+.nav,
+.nav-container,
+.nav-menu {
+    text-align: left;
+}
+
+/* Forms should remain left-aligned */
+.booking-form,
+.form-row,
+.form-group {
+    text-align: left;
+}
+
+/* Footer should remain left-aligned */
+.footer,
+.footer .container {
+    text-align: left;
 }
 
 img {
@@ -1105,12 +1148,17 @@ button.btn {
     align-items: center;
     justify-content: center;
     padding: 1.5rem;
-    background: var(--white-05);
+    background: rgba(248, 152, 30, 0.15); /* Orange with lower opacity */
+    border: none; /* No outline */
     border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-normal);
 }
 
 .platform-card:hover .platform-icon {
-    background: var(--gold-10);
+    background: rgba(248, 152, 30, 0.25); /* Slightly more opaque on hover */
+    box-shadow: 0 6px 20px var(--accent-gold-30), inset 0 1px 2px rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
 }
 
 .platform-icon svg {
@@ -1586,8 +1634,10 @@ button.btn {
     gap: calc(var(--spacing-md) * 1.2);
 }
 
+/* Unified styling for all form inputs - ensures consistency */
 .form-row input,
-.form-row select {
+.form-row select,
+.form-row textarea {
     width: 100%;
     padding: 1.2rem 1.8rem;
     border: 2px solid var(--accent-gold-40);
@@ -1602,6 +1652,12 @@ button.btn {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.1);
     transition: all var(--transition-normal);
     text-align: left; /* Form inputs should remain left-aligned */
+}
+
+/* Textarea-specific properties */
+.form-row textarea {
+    resize: vertical;
+    min-height: 100px;
 }
 
 .form-row input::placeholder {
@@ -1631,8 +1687,10 @@ button.btn {
     font-weight: 400;
 }
 
+/* Unified focus state for all form inputs */
 .form-row input:focus,
-.form-row select:focus {
+.form-row select:focus,
+.form-row textarea:focus {
     outline: none;
     border-color: var(--accent-gold);
     background: var(--bg-dark);
@@ -2350,6 +2408,12 @@ button.btn {
     text-align: left; /* Etiquette cards should remain left-aligned */
 }
 
+/* Add extra space between header and first card */
+.etiquette-content .title-underline + .etiquette-section-card,
+.etiquette-content > .etiquette-section-card:first-of-type {
+    margin-top: calc(var(--spacing-xl) * 1.5); /* Increased space above first card */
+}
+
 .etiquette-section-card:hover {
     border-color: var(--accent-gold);
     box-shadow: 0 8px 30px var(--accent-gold-30);
@@ -2764,37 +2828,7 @@ button.btn {
     width: 100%;
 }
 
-.form-row textarea {
-    width: 100%;
-    padding: 1.1rem 1.6rem;
-    border: 2px solid var(--accent-gold-40);
-    border-radius: 16px;
-    background: var(--bg-dark);
-    color: var(--text-light);
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
-    letter-spacing: 0.3px;
-    resize: vertical;
-    min-height: 100px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.1);
-    text-align: left; /* Form textareas should remain left-aligned */
-}
-
-.form-row textarea::placeholder {
-    color: rgba(244, 229, 212, 0.7);
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
-    letter-spacing: 0.3px;
-}
-
-.form-row textarea:focus {
-    outline: none;
-    border-color: var(--accent-gold);
-    background: var(--bg-dark);
-    box-shadow: 0 0 25px var(--gold-40), 0 6px 20px var(--black-30), inset 0 1px 2px rgba(255, 255, 255, 0.15);
-}
+/* Note: textarea styling is now unified with input/select above */
 
 .form-actions {
     text-align: center;
