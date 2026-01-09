@@ -1338,6 +1338,10 @@ button.btn {
     padding-top: 100%; /* 1:1 aspect ratio */
     overflow: hidden;
     background: var(--black-80);
+    /* Performance optimizations */
+    contain: layout style paint;
+    /* Smooth placeholder background */
+    background-image: linear-gradient(135deg, var(--black-80) 0%, var(--black-60) 100%);
 }
 
 .gallery-item-image img {
@@ -1347,6 +1351,19 @@ button.btn {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    /* Performance optimizations */
+    will-change: opacity;
+    content-visibility: auto;
+    /* Smooth transitions for progressive loading */
+    transition: opacity 0.3s ease-in-out;
+    /* Prevent layout shift */
+    aspect-ratio: 1 / 1;
+    /* Optimize image rendering */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    /* Backface visibility for smoother animations */
+    backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
 

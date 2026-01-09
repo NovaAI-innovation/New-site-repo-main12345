@@ -357,6 +357,9 @@ function generateCloudinaryUrl(originalUrl, size = 'thumbnail', forceQuality = n
     return originalUrl.replace('/upload/', `/upload/${transformation}/`);
 }
 
+// Make function globally accessible for lightbox
+window.generateCloudinaryUrl = generateCloudinaryUrl;
+
 /**
  * Generate srcset for responsive images
  * Optimized based on connection speed

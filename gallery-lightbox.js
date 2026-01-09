@@ -153,10 +153,17 @@
 
         /**
          * Preload adjacent images
+         * Only preloads on good connections
          */
         preloadAdjacent: function(currentIndex) {
             const images = state.images;
             if (!images || images.length === 0) return;
+
+            // Skip preloading on slow connections
+            if (typeof NetworkInfo !== 'undefined' && NetworkInfo.isSlowConnection()) {
+                utils.log('Skipping adjacent preload due to slow connection');
+                return Promise.resolve([]);
+            }
 
             const preloadPromises = [];
             
@@ -339,9 +346,14 @@
                     return;
                 }
 
-                // Load image
+                // Load image with connection-aware quality
                 const fullSizeUrl = utils.generateCloudinaryUrl(imageUrl, 'full');
                 const img = new Image();
+
+                // Set fetch priority for better loading
+                if ('fetchPriority' in img) {
+                    img.fetchPriority = 'high'; // Lightbox images are high priority
+                }
 
                 const timeout = setTimeout(() => {
                     img.onload = null;
