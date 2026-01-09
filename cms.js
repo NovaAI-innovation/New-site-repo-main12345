@@ -4,22 +4,72 @@
  */
 
 // =====================
-// FETCH HELPER WITH CORS SUPPORT
+// FETCH HELPER WITH CORS SUPPORT AND JWT AUTH
 // =====================
 
 /**
- * Helper function to make fetch requests with proper CORS configuration
+ * Get stored JWT token from sessionStorage
+ * @returns {string|null} - JWT token or null
+ */
+function getAuthToken() {
+    return sessionStorage.getItem('cms_jwt_token');
+}
+
+/**
+ * Store JWT token in sessionStorage
+ * @param {string} token - JWT token to store
+ */
+function setAuthToken(token) {
+    sessionStorage.setItem('cms_jwt_token', token);
+}
+
+/**
+ * Remove JWT token from sessionStorage
+ */
+function clearAuthToken() {
+    sessionStorage.removeItem('cms_jwt_token');
+}
+
+/**
+ * Helper function to make fetch requests with proper CORS configuration and JWT authentication
  * @param {string} url - The URL to fetch
  * @param {Object} options - Fetch options (method, headers, body, etc.)
  * @returns {Promise<Response>} - The fetch response
  */
 async function fetchWithCORS(url, options = {}) {
     // Ensure CORS mode is explicitly set (defaults to 'cors' but being explicit)
+    // Note: credentials is set to 'omit' to match backend CORS config (allow_credentials=False)
+    // JWT tokens are sent via Authorization header, not cookies
     const fetchOptions = {
         mode: 'cors',  // Explicitly set CORS mode
         credentials: 'omit',  // Don't send credentials (matches backend allow_credentials=False)
         ...options,
     };
+    
+    // Log request details for debugging (only in development)
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.debug('Making request:', {
+            url,
+            method: fetchOptions.method || 'GET',
+            mode: fetchOptions.mode,
+            credentials: fetchOptions.credentials,
+            hasAuth: !!getAuthToken()
+        });
+    }
+
+    // Add JWT token to Authorization header if available
+    const token = getAuthToken();
+    if (token && !fetchOptions.headers) {
+        fetchOptions.headers = {};
+    }
+    if (token && fetchOptions.headers) {
+        // Ensure headers is an object
+        if (fetchOptions.headers instanceof Headers) {
+            fetchOptions.headers.set('Authorization', `Bearer ${token}`);
+        } else {
+            fetchOptions.headers['Authorization'] = `Bearer ${token}`;
+        }
+    }
     
     // Don't override Content-Type if body is FormData (browser sets it automatically)
     if (options.body instanceof FormData) {
@@ -34,17 +84,80 @@ async function fetchWithCORS(url, options = {}) {
                 fetchOptions.headers = headers;
             }
         }
+    } else if (!fetchOptions.headers || (!(fetchOptions.headers instanceof Headers) && !fetchOptions.headers['Content-Type'])) {
+        // Set Content-Type for JSON requests if not already set
+        if (!fetchOptions.headers) {
+            fetchOptions.headers = {};
+        }
+        if (!(fetchOptions.headers instanceof Headers)) {
+            fetchOptions.headers['Content-Type'] = 'application/json';
+        } else {
+            fetchOptions.headers.set('Content-Type', 'application/json');
+        }
     }
     
     try {
-        return await fetch(url, fetchOptions);
+        // Use fetchWithRetry if available (from api-config.js)
+        const fetchFn = typeof fetchWithRetry !== 'undefined' ? fetchWithRetry : fetch;
+        const response = await fetchFn(url, fetchOptions);
+        
+        // Handle 401 Unauthorized - token expired or invalid
+        // Skip token refresh for authentication endpoints (login, refresh)
+        const isAuthEndpoint = url.includes('/cms/login') || url.includes('/cms/refresh');
+        
+        if (response.status === 401 && !isAuthEndpoint) {
+            // Only attempt token refresh for non-auth endpoints
+            console.warn('Authentication failed, attempting token refresh...');
+            try {
+                const refreshResponse = await fetchFn(API_ENDPOINTS.CMS_REFRESH, {
+                    method: 'POST',
+                    credentials: 'omit',
+                });
+                
+                if (refreshResponse.ok) {
+                    const refreshData = await refreshResponse.json();
+                    if (refreshData.access_token) {
+                        setAuthToken(refreshData.access_token);
+                        cmsState.token = refreshData.access_token;
+                        
+                        // Retry original request with new token
+                        if (fetchOptions.headers instanceof Headers) {
+                            fetchOptions.headers.set('Authorization', `Bearer ${refreshData.access_token}`);
+                        } else {
+                            fetchOptions.headers['Authorization'] = `Bearer ${refreshData.access_token}`;
+                        }
+                        return await fetchFn(url, fetchOptions);
+                    }
+                }
+            } catch (refreshError) {
+                console.error('Token refresh failed:', refreshError);
+            }
+            
+            // Refresh failed, show auth screen
+            showAuth();
+            throw new Error('Authentication expired. Please login again.');
+        }
+        
+        // For auth endpoints, return the response as-is (even if 401)
+        // This allows the login handler to process the error appropriately
+        
+        return response;
     } catch (error) {
         // Re-throw with more context
-        console.error('Fetch error:', {
+        const errorDetails = {
             url,
             method: options.method || 'GET',
-            error: error.message
-        });
+            error: error.message || error.toString(),
+            name: error.name,
+            stack: error.stack
+        };
+        console.error('Fetch error:', errorDetails);
+        
+        // Enhance error message if it's a network error
+        if (error.message?.includes('Failed to fetch') || error.name === 'TypeError') {
+            error.message = `Network error connecting to ${url}. ${error.message || 'Please check your connection.'}`;
+        }
+        
         throw error;
     }
 }
@@ -55,7 +168,8 @@ async function fetchWithCORS(url, options = {}) {
 
 const cmsState = {
     authenticated: false,
-    password: null,
+    token: null,
+    tokenExpiry: null,
     selectedImages: new Set(),
     images: [],
     filesToUpload: [],
@@ -119,21 +233,47 @@ const elements = {
 // =====================
 
 function checkAuth() {
-    const savedPassword = sessionStorage.getItem('cms_password');
-    if (savedPassword) {
-        cmsState.password = savedPassword;
-        cmsState.authenticated = true;
-        showDashboard();
-        loadGalleryImages();
+    const savedToken = getAuthToken();
+    if (savedToken) {
+        cmsState.token = savedToken;
+        // Try to verify token by making a test request
+        // If it fails, we'll show auth screen
+        verifyTokenAndLoad();
     }
+}
+
+async function verifyTokenAndLoad() {
+    try {
+        // Try to refresh token or verify it's still valid
+        const response = await fetchWithCORS(API_ENDPOINTS.CMS_REFRESH, {
+            method: 'POST',
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.access_token) {
+                setAuthToken(data.access_token);
+                cmsState.token = data.access_token;
+                cmsState.authenticated = true;
+                showDashboard();
+                loadGalleryImages();
+                return;
+            }
+        }
+    } catch (error) {
+        console.error('Token verification failed:', error);
+    }
+
+    // Token invalid or expired, show auth screen
+    showAuth();
 }
 
 function showAuth() {
     elements.authSection.classList.remove('hidden');
     elements.cmsDashboard.classList.add('hidden');
     cmsState.authenticated = false;
-    cmsState.password = null;
-    sessionStorage.removeItem('cms_password');
+    cmsState.token = null;
+    clearAuthToken();
 }
 
 function showDashboard() {
@@ -155,30 +295,103 @@ elements.authForm.addEventListener('submit', async (e) => {
         return;
     }
 
+    // Show loading state
+    const submitButton = elements.authForm.querySelector('button[type="submit"]');
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Logging in...';
+    }
+    hideError(elements.authError);
+
     try {
-        const response = await fetchWithCORS(API_ENDPOINTS.CMS_GALLERY_IMAGES, {
-            method: 'GET',
-            headers: {
-                'X-CMS-Password': password,
-                'Content-Type': 'application/json'
+        // First, verify API is reachable with a health check
+        try {
+            const healthController = new AbortController();
+            const healthTimeout = setTimeout(() => healthController.abort(), 5000);
+            
+            const healthCheck = await fetch(`${API_BASE_URL}/health`, {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'omit',
+                signal: healthController.signal
+            });
+            
+            clearTimeout(healthTimeout);
+            
+            if (!healthCheck.ok) {
+                throw new Error(`API health check failed with status ${healthCheck.status}`);
             }
+        } catch (healthError) {
+            console.error('API health check failed:', healthError);
+            const errorMsg = healthError.name === 'AbortError' 
+                ? `Connection timeout. The API server at ${API_BASE_URL} is not responding.`
+                : `Cannot connect to API server at ${API_BASE_URL}. Please verify the server is running and accessible.`;
+            showError(elements.authError, errorMsg);
+            return;
+        }
+
+        // Call login endpoint to get JWT token
+        const response = await fetchWithCORS(API_ENDPOINTS.CMS_LOGIN, {
+            method: 'POST',
+            body: JSON.stringify({ password: password })
         });
 
         if (response.ok) {
-            cmsState.password = password;
-            cmsState.authenticated = true;
-            sessionStorage.setItem('cms_password', password);
-            showDashboard();
-            loadGalleryImages();
-            elements.passwordInput.value = '';
-            hideError(elements.authError);
+            const data = await response.json();
+            if (data.access_token) {
+                // Store JWT token
+                setAuthToken(data.access_token);
+                cmsState.token = data.access_token;
+                cmsState.authenticated = true;
+                
+                // Calculate token expiry (if provided)
+                if (data.expires_in) {
+                    cmsState.tokenExpiry = Date.now() + (data.expires_in * 1000);
+                }
+                
+                showDashboard();
+                loadGalleryImages();
+                elements.passwordInput.value = '';
+                hideError(elements.authError);
+            } else {
+                showError(elements.authError, 'Invalid response from server');
+            }
         } else {
-            const errorData = await response.json();
-            showError(elements.authError, errorData.detail?.message || 'Invalid password');
+            // Handle error response
+            let errorMessage = 'Invalid password';
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.detail?.message || errorData.detail?.error || errorData.error || 'Invalid password';
+            } catch (jsonError) {
+                // Response might not be JSON, use status text
+                errorMessage = response.statusText || `Server returned ${response.status}`;
+            }
+            showError(elements.authError, errorMessage);
         }
     } catch (error) {
         console.error('Authentication error:', error);
-        showError(elements.authError, 'Failed to connect to server');
+        
+        // Provide specific error messages based on error type
+        let errorMessage = 'Failed to connect to server';
+        
+        if (error.name === 'AbortError' || error.message?.includes('timeout')) {
+            errorMessage = 'Connection timeout. Please check your internet connection and try again.';
+        } else if (error.message?.includes('Failed to fetch') || error.message?.includes('Network error')) {
+            errorMessage = `Cannot reach server at ${API_BASE_URL}. Please check:\n` +
+                         `1. Your internet connection\n` +
+                         `2. The API server is running\n` +
+                         `3. CORS is properly configured`;
+        } else if (error.message) {
+            errorMessage = error.message;
+        }
+        
+        showError(elements.authError, errorMessage);
+    } finally {
+        const submitButton = elements.authForm.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Login';
+        }
     }
 });
 
@@ -497,9 +710,6 @@ elements.uploadBtn.addEventListener('click', async () => {
             try {
                 const response = await fetchWithCORS(API_ENDPOINTS.CMS_GALLERY_IMAGES, {
                     method: 'POST',
-                    headers: {
-                        'X-CMS-Password': cmsState.password
-                    },
                     body: formData
                 });
 
@@ -569,11 +779,7 @@ async function loadGalleryImages() {
 
     try {
         const response = await fetchWithCORS(API_ENDPOINTS.CMS_GALLERY_IMAGES, {
-            method: 'GET',
-            headers: {
-                'X-CMS-Password': cmsState.password,
-                'Content-Type': 'application/json'
-            }
+            method: 'GET'
         });
 
         if (response.ok) {
@@ -827,10 +1033,6 @@ async function saveImageOrder() {
         // Call reorder API endpoint
         const response = await fetchWithCORS(API_ENDPOINTS.CMS_REORDER_IMAGES, {
             method: 'PUT',
-            headers: {
-                'X-CMS-Password': cmsState.password,
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({
                 image_ids: orderedIds
             })
@@ -1142,10 +1344,6 @@ elements.deleteSelectedBtn.addEventListener('click', async () => {
     try {
         const response = await fetchWithCORS(API_ENDPOINTS.CMS_BULK_DELETE, {
             method: 'DELETE',
-            headers: {
-                'X-CMS-Password': cmsState.password,
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({
                 image_ids: Array.from(cmsState.selectedImages)
             })
@@ -1180,10 +1378,7 @@ async function deleteImage(imageId) {
 
     try {
         const response = await fetchWithCORS(API_ENDPOINTS.CMS_GALLERY_IMAGE(imageId), {
-            method: 'DELETE',
-            headers: {
-                'X-CMS-Password': cmsState.password
-            }
+            method: 'DELETE'
         });
 
         if (response.ok) {
@@ -1251,10 +1446,6 @@ async function saveCaptionUpdate() {
     try {
         const response = await fetchWithCORS(API_ENDPOINTS.CMS_GALLERY_IMAGE(currentEditingImageId), {
             method: 'PUT',
-            headers: {
-                'X-CMS-Password': cmsState.password,
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({
                 caption: newCaption || null
             })

@@ -238,7 +238,10 @@ async function fetchGalleryImages(cursor = null, useCache = true) {
 
         console.log('Fetching gallery images from:', url.toString());
 
-        const response = await fetch(url, {
+        // Use fetchWithRetry if available (from api-config.js), otherwise use regular fetch
+        const fetchFn = typeof fetchWithRetry !== 'undefined' ? fetchWithRetry : fetch;
+        
+        const response = await fetchFn(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
