@@ -52,6 +52,77 @@ let galleryState = {
     isLoading: false
 };
 
+// Image loading state - track which images are loading/loaded to prevent duplicates
+const imageLoadingState = new Map(); // Map<imageUrl, { loading: boolean, loaded: boolean, retries: number }>
+
+// Intersection Observer for lazy loading (shared instance)
+let lazyLoadObserver = null;
+
+/**
+ * Initialize Intersection Observer for lazy loading
+ * Uses dynamic rootMargin based on connection speed
+ */
+function initLazyLoadObserver() {
+    if (lazyLoadObserver) return lazyLoadObserver;
+    
+    if (!('IntersectionObserver' in window)) {
+        return null;
+    }
+    
+    // Dynamic rootMargin based on connection speed
+    let rootMargin = '50px'; // Default
+    if (NetworkInfo.isSlowConnection()) {
+        rootMargin = '100px'; // Load earlier on slow connections
+    } else if (NetworkInfo.isFastConnection()) {
+        rootMargin = '200px'; // Preload more aggressively on fast connections
+    }
+    
+    lazyLoadObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                const imageUrl = img.dataset.originalUrl;
+                const thumbnailUrl = img.dataset.thumbnailUrl;
+                
+                if (thumbnailUrl && !img.dataset.loaded) {
+                    // Mark as loading to prevent duplicate requests
+                    if (!imageLoadingState.has(imageUrl)) {
+                        imageLoadingState.set(imageUrl, { loading: true, loaded: false, retries: 0 });
+                        
+                        // Load thumbnail
+                        const tempImg = new Image();
+                        tempImg.onload = () => {
+                            img.src = thumbnailUrl;
+                            img.dataset.loaded = 'true';
+                            imageLoadingState.set(imageUrl, { loading: false, loaded: true, retries: 0 });
+                            lazyLoadObserver.unobserve(img);
+                        };
+                        tempImg.onerror = () => {
+                            // Retry logic
+                            const state = imageLoadingState.get(imageUrl);
+                            if (state && state.retries < 2) {
+                                state.retries++;
+                                setTimeout(() => {
+                                    tempImg.src = thumbnailUrl;
+                                }, 1000 * state.retries);
+                            } else {
+                                imageLoadingState.delete(imageUrl);
+                                img.dispatchEvent(new Event('error'));
+                            }
+                        };
+                        tempImg.src = thumbnailUrl;
+                    }
+                }
+            }
+        });
+    }, {
+        rootMargin: rootMargin,
+        threshold: 0.01
+    });
+    
+    return lazyLoadObserver;
+}
+
 /**
  * Get cached gallery data from localStorage
  * Returns object with data and cache metadata, or null if no valid cache
@@ -166,23 +237,104 @@ window.clearGalleryCache = function() {
 };
 
 /**
+ * Network connection detection
+ */
+const NetworkInfo = {
+    effectiveType: '4g', // Default to 4g
+    downlink: 10, // Default to 10 Mbps
+    saveData: false,
+    
+    init: function() {
+        if ('connection' in navigator) {
+            const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            if (conn) {
+                this.effectiveType = conn.effectiveType || '4g';
+                this.downlink = conn.downlink || 10;
+                this.saveData = conn.saveData || false;
+                
+                // Listen for connection changes
+                conn.addEventListener('change', () => {
+                    this.effectiveType = conn.effectiveType || '4g';
+                    this.downlink = conn.downlink || 10;
+                    this.saveData = conn.saveData || false;
+                });
+            }
+        }
+    },
+    
+    isSlowConnection: function() {
+        return this.effectiveType === 'slow-2g' || this.effectiveType === '2g' || 
+               this.downlink < 1.5 || this.saveData;
+    },
+    
+    isFastConnection: function() {
+        return this.effectiveType === '4g' && this.downlink >= 5 && !this.saveData;
+    }
+};
+
+// Initialize network detection
+NetworkInfo.init();
+
+/**
  * Cloudinary transformation configurations
+ * Optimized for different connection speeds and device types
  */
 const CLOUDINARY_TRANSFORMS = {
-    blur: 'c_fill,w_50,h_50,q_auto:low,f_auto,blur_300', // Ultra-small blur placeholder
-    thumbnail: 'c_fill,w_400,h_400,q_auto,f_auto',
-    medium: 'c_fill,w_800,h_800,q_auto,f_auto',
-    full: 'c_fill,w_1600,h_1600,q_auto,f_auto'
+    // Ultra-small blur placeholder (always use for initial load)
+    blur: 'c_fill,w_20,h_20,q_auto:low,f_auto,blur_300',
+    
+    // Thumbnail sizes - responsive based on viewport
+    thumbnail: {
+        slow: 'c_fill,w_300,h_300,q_auto:low,f_auto', // Slow connections
+        normal: 'c_fill,w_400,h_400,q_auto,f_auto', // Normal connections
+        fast: 'c_fill,w_500,h_500,q_auto:best,f_auto' // Fast connections
+    },
+    
+    // Medium sizes for larger displays
+    medium: {
+        slow: 'c_fill,w_600,h_600,q_auto:low,f_auto',
+        normal: 'c_fill,w_800,h_800,q_auto,f_auto',
+        fast: 'c_fill,w_1000,h_1000,q_auto:best,f_auto'
+    },
+    
+    // Full size for lightbox
+    full: {
+        slow: 'c_fill,w_1200,h_1200,q_auto:good,f_auto',
+        normal: 'c_fill,w_1600,h_1600,q_auto:best,f_auto',
+        fast: 'c_fill,w_2000,h_2000,q_auto:best,f_auto'
+    }
 };
 
 /**
+ * Get appropriate transformation based on connection speed
+ */
+function getTransformation(size) {
+    const transforms = CLOUDINARY_TRANSFORMS[size];
+    if (!transforms) return CLOUDINARY_TRANSFORMS.thumbnail.normal;
+    
+    if (typeof transforms === 'string') {
+        return transforms; // For blur placeholder
+    }
+    
+    if (NetworkInfo.isSlowConnection()) {
+        return transforms.slow;
+    } else if (NetworkInfo.isFastConnection()) {
+        return transforms.fast;
+    } else {
+        return transforms.normal;
+    }
+}
+
+/**
  * Generate optimized Cloudinary URL with transformations
+ * Uses connection-aware quality settings
  *
  * @param {string} originalUrl - Original Cloudinary URL
- * @param {string} size - Size preset (thumbnail, medium, full)
+ * @param {string} size - Size preset (blur, thumbnail, medium, full)
+ * @param {boolean} forceQuality - Force a specific quality (optional)
  * @returns {string} Transformed URL
  */
-function generateCloudinaryUrl(originalUrl, size = 'thumbnail') {
+function generateCloudinaryUrl(originalUrl, size = 'thumbnail', forceQuality = null) {
     if (!originalUrl) return '';
 
     // Cloudinary URL pattern: https://res.cloudinary.com/{cloud}/image/upload/{public_id}
@@ -193,7 +345,13 @@ function generateCloudinaryUrl(originalUrl, size = 'thumbnail') {
         return originalUrl;
     }
 
-    const transformation = CLOUDINARY_TRANSFORMS[size] || CLOUDINARY_TRANSFORMS.thumbnail;
+    // Get transformation based on connection speed (unless forced)
+    let transformation;
+    if (size === 'blur') {
+        transformation = CLOUDINARY_TRANSFORMS.blur;
+    } else {
+        transformation = getTransformation(size);
+    }
 
     // Insert transformations after /upload/
     return originalUrl.replace('/upload/', `/upload/${transformation}/`);
@@ -201,12 +359,22 @@ function generateCloudinaryUrl(originalUrl, size = 'thumbnail') {
 
 /**
  * Generate srcset for responsive images
+ * Optimized based on connection speed
  *
  * @param {string} originalUrl - Original Cloudinary URL
  * @returns {string} srcset attribute value
  */
 function generateSrcset(originalUrl) {
-    return `${generateCloudinaryUrl(originalUrl, 'thumbnail')} 400w, ${generateCloudinaryUrl(originalUrl, 'medium')} 800w`;
+    if (NetworkInfo.isSlowConnection()) {
+        // For slow connections, use smaller sizes
+        return `${generateCloudinaryUrl(originalUrl, 'thumbnail')} 300w, ${generateCloudinaryUrl(originalUrl, 'medium')} 600w`;
+    } else if (NetworkInfo.isFastConnection()) {
+        // For fast connections, use larger sizes
+        return `${generateCloudinaryUrl(originalUrl, 'thumbnail')} 500w, ${generateCloudinaryUrl(originalUrl, 'medium')} 1000w`;
+    } else {
+        // Normal connection
+        return `${generateCloudinaryUrl(originalUrl, 'thumbnail')} 400w, ${generateCloudinaryUrl(originalUrl, 'medium')} 800w`;
+    }
 }
 
 /**
@@ -288,6 +456,7 @@ async function fetchGalleryImages(cursor = null, useCache = true) {
 
 /**
  * Create a gallery grid item element from image data
+ * Optimized with progressive loading, connection-aware quality, and better lazy loading
  */
 function createGalleryItem(image, index) {
     const item = document.createElement('div');
@@ -301,50 +470,85 @@ function createGalleryItem(image, index) {
     // Create optimized image element with responsive images
     const img = document.createElement('img');
 
-    // Use blur placeholder for instant visual feedback, then load thumbnail
-    // This creates a progressive loading effect
+    // Progressive loading: Start with ultra-small blur placeholder
     const blurPlaceholder = generateCloudinaryUrl(image.cloudinary_url, 'blur');
     img.src = blurPlaceholder;
     
-    // Use thumbnail as primary src, with srcset for responsiveness
+    // Store URLs in dataset for lazy loading
     const thumbnailUrl = generateCloudinaryUrl(image.cloudinary_url, 'thumbnail');
+    img.dataset.originalUrl = image.cloudinary_url;
+    img.dataset.thumbnailUrl = thumbnailUrl;
+    
+    // Responsive images with srcset
     img.srcset = generateSrcset(image.cloudinary_url);
     img.sizes = '(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw';
     img.alt = image.caption || `Makayla Moon Gallery ${index + 1}`;
     
-    // Optimize loading strategy for first load
-    // First 6 images are above the fold and should load eagerly
+    // Set aspect ratio to prevent layout shift (1:1 for gallery items)
+    img.style.aspectRatio = '1 / 1';
+    img.style.objectFit = 'cover';
+    
+    // Optimize loading strategy based on position and connection
     const isAboveFold = index < 6;
-    if (isAboveFold) {
-        // Eager load above-the-fold images for faster initial render
+    const isSlowConnection = NetworkInfo.isSlowConnection();
+    
+    if (isAboveFold && !isSlowConnection) {
+        // Eager load above-the-fold images on good connections
         img.loading = 'eager';
         img.fetchPriority = 'high';
         img.decoding = 'async';
         
-        // Load full thumbnail immediately for above-fold images
-        const fullImg = new Image();
-        fullImg.onload = () => {
+        // Preload thumbnail immediately
+        const preloadImg = new Image();
+        preloadImg.onload = () => {
+            // Smooth transition from blur to thumbnail
+            img.style.transition = 'opacity 0.3s ease-in-out';
             img.src = thumbnailUrl;
+            img.dataset.loaded = 'true';
         };
-        fullImg.src = thumbnailUrl;
+        preloadImg.onerror = () => {
+            // If preload fails, still try to load on next frame
+            requestAnimationFrame(() => {
+                img.src = thumbnailUrl;
+            });
+        };
+        preloadImg.src = thumbnailUrl;
+    } else if (isAboveFold && isSlowConnection) {
+        // On slow connections, even above-fold images should be lazy
+        // but with higher priority
+        img.loading = 'lazy';
+        img.fetchPriority = 'high';
+        img.decoding = 'async';
+        
+        // Use requestIdleCallback if available, otherwise setTimeout
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => {
+                const tempImg = new Image();
+                tempImg.onload = () => {
+                    img.src = thumbnailUrl;
+                    img.dataset.loaded = 'true';
+                };
+                tempImg.src = thumbnailUrl;
+            }, { timeout: 1000 });
+        } else {
+            setTimeout(() => {
+                const tempImg = new Image();
+                tempImg.onload = () => {
+                    img.src = thumbnailUrl;
+                    img.dataset.loaded = 'true';
+                };
+                tempImg.src = thumbnailUrl;
+            }, 100);
+        }
     } else {
         // Lazy load below-the-fold images
         img.loading = 'lazy';
         img.fetchPriority = 'low';
         img.decoding = 'async';
         
-        // Use Intersection Observer for better lazy loading control
-        if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        img.src = thumbnailUrl;
-                        observer.unobserve(img);
-                    }
-                });
-            }, {
-                rootMargin: '50px' // Start loading 50px before image enters viewport
-            });
+        // Use shared Intersection Observer for better performance
+        const observer = initLazyLoadObserver();
+        if (observer) {
             observer.observe(img);
         } else {
             // Fallback: load on next frame
@@ -354,19 +558,47 @@ function createGalleryItem(image, index) {
         }
     }
     
-    // Add dimensions to prevent layout shift (400x400 for thumbnails)
+    // Add dimensions to prevent layout shift
+    // Use aspect-ratio CSS property (already set above) and width/height for older browsers
     img.width = 400;
     img.height = 400;
 
-    // Add error handling for broken images
-    img.onerror = function() {
-        console.error(`Failed to load image: ${image.cloudinary_url}`);
-        this.style.display = 'none';
-        const errorMsg = document.createElement('div');
-        errorMsg.className = 'gallery-item-error';
-        errorMsg.textContent = 'Failed to load image';
-        imageWrapper.appendChild(errorMsg);
-    };
+    // Enhanced error handling with retry logic
+    img.addEventListener('error', function() {
+        const state = imageLoadingState.get(image.cloudinary_url);
+        if (state && state.retries < 2) {
+            // Retry loading
+            state.retries++;
+            setTimeout(() => {
+                const retryImg = new Image();
+                retryImg.onload = () => {
+                    img.src = thumbnailUrl;
+                    img.dataset.loaded = 'true';
+                    imageLoadingState.set(image.cloudinary_url, { loading: false, loaded: true, retries: state.retries });
+                };
+                retryImg.onerror = () => {
+                    // Final failure
+                    console.error(`Failed to load image after ${state.retries} retries:`, image.cloudinary_url);
+                    this.style.display = 'none';
+                    const errorMsg = document.createElement('div');
+                    errorMsg.className = 'gallery-item-error';
+                    errorMsg.textContent = 'Failed to load image';
+                    imageWrapper.appendChild(errorMsg);
+                    imageLoadingState.delete(image.cloudinary_url);
+                };
+                retryImg.src = thumbnailUrl;
+            }, 1000 * state.retries);
+        } else {
+            // Show error message
+            console.error(`Failed to load image: ${image.cloudinary_url}`);
+            this.style.display = 'none';
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'gallery-item-error';
+            errorMsg.textContent = 'Failed to load image';
+            imageWrapper.appendChild(errorMsg);
+            imageLoadingState.delete(image.cloudinary_url);
+        }
+    });
 
     // Add click handler for lightbox (pass original URL for full-size)
     img.addEventListener('click', () => {

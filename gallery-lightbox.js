@@ -77,6 +77,10 @@
         },
         
         generateCloudinaryUrl: function(imageUrl, transformation) {
+            // Use the global function if available (from gallery-api.js)
+            if (typeof window.generateCloudinaryUrl === 'function') {
+                return window.generateCloudinaryUrl(imageUrl, transformation);
+            }
             if (typeof generateCloudinaryUrl === 'function') {
                 return generateCloudinaryUrl(imageUrl, transformation);
             }
@@ -98,11 +102,18 @@
     const preloader = {
         /**
          * Preload an image and cache it
+         * Only preloads on good connections to save bandwidth
          */
         preloadImage: function(imageUrl, index) {
             // Check if already preloaded
             if (state.preloadedImages.has(index)) {
                 return Promise.resolve(state.preloadedImages.get(index));
+            }
+
+            // Skip preloading on slow connections or data saver mode
+            if (typeof NetworkInfo !== 'undefined' && NetworkInfo.isSlowConnection()) {
+                utils.log(`Skipping preload for image ${index + 1} due to slow connection`);
+                return Promise.resolve(null);
             }
 
             return new Promise((resolve, reject) => {
@@ -130,6 +141,11 @@
                     clearTimeout(timeout);
                     reject(new Error('Failed to load image'));
                 };
+
+                // Use fetchPriority for better loading
+                if ('fetchPriority' in img) {
+                    img.fetchPriority = 'low'; // Preloads are low priority
+                }
 
                 img.src = fullSizeUrl;
             });
