@@ -141,101 +141,13 @@
             font-size: 0.9rem;
         }
 
-        .btn {
-            padding: var(--spacing-sm) var(--spacing-md);
-            border-radius: 5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition-normal);
-            border: none;
-            font-family: var(--font-sans);
-            font-size: 1rem;
-        }
-
-        .btn-primary {
-            background: var(--accent-color);
-            color: var(--text-dark);
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-gold);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(248, 152, 30, 0.4);
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: var(--text-light);
-        }
-
-        .btn-danger:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-light);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
+        /* Button and card styles now use standardized classes from main styles.css */
+        
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: var(--spacing-md);
             margin-top: var(--spacing-md);
-        }
-
-        .gallery-item {
-            position: relative;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: var(--transition-normal);
-        }
-
-        .gallery-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .gallery-item-info {
-            padding: var(--spacing-sm);
-            color: var(--text-light);
-        }
-
-        .gallery-item-info p {
-            margin: var(--spacing-xs) 0;
-            font-size: 0.9rem;
-        }
-
-        .gallery-item-actions {
-            display: flex;
-            gap: 0.2rem;
-            margin-top: var(--spacing-sm);
-        }
-
-        .gallery-item-actions .btn {
-            flex: 1;
-            padding: 0.15rem 0.35rem;
-            font-size: 0.65rem;
         }
 
         .image-card-actions {
@@ -515,21 +427,21 @@
 
                 <!-- Dashboard Header with Stats -->
                 <div class="cms-stats-container">
-                    <div class="stat-card">
+                    <div class="card stat-card">
                         <div class="stat-icon">🖼️</div>
                         <div class="stat-content">
                             <div class="stat-value" id="total-images">0</div>
                             <div class="stat-label">Total Images</div>
                         </div>
                     </div>
-                    <div class="stat-card">
+                    <div class="card stat-card">
                         <div class="stat-icon">💾</div>
                         <div class="stat-content">
                             <div class="stat-value" id="total-storage">0 MB</div>
                             <div class="stat-label">Storage Used</div>
                         </div>
                     </div>
-                    <div class="stat-card">
+                    <div class="card stat-card">
                         <div class="stat-icon">📤</div>
                         <div class="stat-content">
                             <div class="stat-value" id="selected-count">0</div>
@@ -553,7 +465,7 @@
                     <div id="upload-message" class="cms-message"></div>
 
                     <!-- Drag & Drop Zone -->
-                    <div id="drop-zone" class="drop-zone">
+                    <div id="drop-zone" class="card drop-zone">
                         <input type="file" id="image-files" name="files" multiple accept="image/*" style="display: none;">
                         <div class="drop-zone-content">
                             <div class="drop-zone-icon">📁</div>

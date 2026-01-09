@@ -485,7 +485,7 @@ function displayFilePreview() {
 
     cmsState.filesToUpload.forEach((file, index) => {
         const fileItem = document.createElement('div');
-        fileItem.className = 'file-preview-item';
+        fileItem.className = 'card file-preview-item';
 
         // Image preview
         const img = document.createElement('img');
@@ -851,7 +851,7 @@ function renderGallery() {
 
 function createImageCard(image, index) {
     const card = document.createElement('div');
-    card.className = 'cms-image-card';
+    card.className = 'card cms-image-card';
     card.dataset.imageId = image.id;
     card.draggable = true;
 

@@ -64,6 +64,7 @@ a {
     color: inherit;
 }
 
+/* Base button element - should use .btn class for styling */
 button {
     font-family: inherit;
     cursor: pointer;
@@ -117,36 +118,89 @@ button {
     margin-right: auto;
 }
 
-.btn {
+/* ===========================
+   Standardized Button System
+   =========================== 
+   
+   Usage Examples:
+   
+   Basic Button:
+   <button class="btn">Button</button>
+   
+   Primary Button:
+   <button class="btn btn-primary">Primary</button>
+   
+   Secondary Button:
+   <button class="btn btn-secondary">Secondary</button>
+   
+   Button Sizes:
+   <button class="btn btn-small">Small</button>
+   <button class="btn btn-large">Large</button>
+   
+   Button Variants:
+   <button class="btn btn-danger">Delete</button>
+   <button class="btn btn-icon-only">Icon</button>
+   =========================== */
+
+/* Base Button Class */
+.btn,
+button.btn {
     display: inline-block;
     padding: 0.875rem 2rem;
     font-size: 1rem;
     font-weight: 500;
-    border-radius: 50px;
+    border-radius: 10px;
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    transform: translateY(0);
 }
 
+/* Global Standard Button Animation - Applied to All Buttons */
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left var(--transition-slow);
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(248, 152, 30, 0.4);
+}
+
+.btn:active {
+    transform: translateY(0);
+    transition: transform var(--transition-fast);
+}
+
+/* Button Variants */
+
+/* Primary Button */
 .btn-primary {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: var(--text-light);
     box-shadow: 0 4px 15px rgba(248, 152, 30, 0.3);
-    position: relative;
-    overflow: hidden;
 }
 
+/* Primary button uses global hover animation from .btn:hover */
 
-.btn-primary:hover {
-    box-shadow: 0 6px 20px rgba(248, 152, 30, 0.4);
-}
-
-/* Magnetic CTA buttons */
-.btn-magnetic {
-    position: relative;
-}
-
-
-
+/* Secondary Button */
 .btn-secondary {
     background: transparent;
     color: var(--primary-color);
@@ -156,6 +210,105 @@ button {
 .btn-secondary:hover {
     background: var(--primary-color);
     color: var(--text-light);
+    /* Uses global hover animation from .btn:hover */
+}
+
+/* Danger Button */
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #c82333, #bd2130);
+    /* Uses global hover animation from .btn:hover */
+}
+
+/* Button Sizes */
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.btn-large {
+    padding: 1.2rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Button Modifiers */
+.btn-icon-only {
+    padding: 0.7rem;
+    min-width: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Deprecated: .btn-magnetic - All buttons now use global standard animation */
+
+.btn-full-width {
+    width: 100%;
+    display: block;
+}
+
+.btn-disabled,
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Button with Icon */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-icon .btn-icon {
+    font-size: 1.2em;
+}
+
+/* Button Loading State */
+.btn-loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1em;
+    height: 1em;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: btn-spin 0.6s linear infinite;
+}
+
+@keyframes btn-spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Responsive Button Adjustments */
+@media (max-width: 768px) {
+    .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .btn-large {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
 }
 
 /* ===========================
@@ -491,6 +644,274 @@ button {
 }
 
 /* ===========================
+   Standardized Card System
+   =========================== 
+   
+   Usage Examples:
+   
+   Basic Card:
+   <div class="card">
+       <div class="card-header">
+           <h3 class="card-title">Title</h3>
+           <p class="card-subtitle">Subtitle</p>
+       </div>
+       <div class="card-body">
+           <p class="card-text">Card content goes here</p>
+       </div>
+       <div class="card-footer">
+           <button class="btn btn-primary">Action</button>
+       </div>
+   </div>
+   
+   Featured Card:
+   <div class="card card-featured">
+       <span class="card-badge">Featured</span>
+       <!-- content -->
+   </div>
+   
+   Horizontal Card:
+   <div class="card card-horizontal">
+       <div class="card-icon">Icon</div>
+       <div class="card-body">Content</div>
+   </div>
+   
+   Card with Modifiers:
+   <div class="card card-centered card-clickable card-full-height">
+       <!-- content -->
+   </div>
+   
+   Existing card classes (.platform-card, .service-card, .stat-card) 
+   automatically inherit base card styles for backward compatibility.
+   =========================== */
+
+/* Base Card Class - Applies to all card types for consistency */
+.card,
+.platform-card,
+.service-card,
+.stat-card {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(248, 152, 30, 0.1));
+    padding: var(--spacing-md);
+    border-radius: 10px;
+    border: 1px solid rgba(248, 152, 30, 0.3);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all var(--transition-normal);
+}
+
+/* Card Hover Effects */
+.card:hover,
+.platform-card:hover,
+.service-card:hover,
+.stat-card:hover {
+    border-color: var(--accent-gold);
+    box-shadow: 0 10px 30px rgba(248, 152, 30, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Card Gradient Overlay */
+.card::before,
+.platform-card::before,
+.service-card::before,
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent, rgba(248, 152, 30, 0.1));
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    pointer-events: none;
+}
+
+.card:hover::before,
+.platform-card:hover::before,
+.service-card:hover::before,
+.stat-card:hover::before {
+    opacity: 1;
+}
+
+/* Card Modifiers */
+
+/* Featured Card */
+.card-featured {
+    border: 2px solid var(--accent-gold);
+    background: linear-gradient(135deg, rgba(248, 152, 30, 0.15), rgba(255, 215, 0, 0.1));
+}
+
+.card-featured:hover {
+    box-shadow: 0 12px 35px rgba(255, 215, 0, 0.4);
+}
+
+/* Card with Action/Clickable */
+.card-clickable {
+    cursor: pointer;
+}
+
+/* Card with Full Height */
+.card-full-height {
+    height: 100%;
+}
+
+/* Card with Centered Content */
+.card-centered {
+    text-align: center;
+    align-items: center;
+}
+
+/* Card with Horizontal Layout */
+.card-horizontal {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+/* Card with Wide Layout */
+.card-wide {
+    grid-column: 1 / -1;
+}
+
+/* Card with Large Size */
+.card-large {
+    padding: var(--spacing-lg);
+}
+
+/* Card with Small Size */
+.card-small {
+    padding: var(--spacing-sm);
+}
+
+/* Card with No Padding */
+.card-no-padding {
+    padding: 0;
+}
+
+/* Card with Info Style (lighter background) */
+.card-info {
+    background: linear-gradient(135deg, rgba(248, 152, 30, 0.1), rgba(0, 0, 0, 0.6));
+    border: 2px solid rgba(248, 152, 30, 0.4);
+}
+
+/* Card with Dark Background */
+.card-dark {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+}
+
+/* Card with Light Background */
+.card-light {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+}
+
+/* Card Content Areas */
+.card-header {
+    margin-bottom: var(--spacing-sm);
+    position: relative;
+    z-index: 1;
+}
+
+.card-body {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.card-footer {
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid rgba(248, 152, 30, 0.2);
+    position: relative;
+    z-index: 1;
+}
+
+/* Card Title */
+.card-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent-gold);
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Card Subtitle */
+.card-subtitle {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Card Text */
+.card-text {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Card Badge */
+.card-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--accent-gold);
+    color: var(--primary-color);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 10;
+}
+
+/* Card Icon Container */
+.card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.card:hover .card-icon {
+    background: rgba(255, 215, 0, 0.1);
+}
+
+/* Card Image */
+.card-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Card Actions */
+.card-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+/* Responsive Card Modifications */
+@media (max-width: 768px) {
+    .card-horizontal {
+        flex-direction: column;
+    }
+    
+    .card-wide {
+        width: 100%;
+    }
+    
+    .card-large {
+        padding: var(--spacing-md);
+    }
+}
+
+/* ===========================
    Platform Cards
    =========================== */
 
@@ -556,33 +977,13 @@ button {
     margin-right: auto;
 }
 
+/* Platform card specific styles */
 .platform-card {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(248, 152, 30, 0.1));
-    padding: var(--spacing-md);
-    border-radius: 15px;
     text-align: center;
-    border: 1px solid rgba(248, 152, 30, 0.3);
-    position: relative;
-    overflow: hidden;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    height: 100%;
-}
-
-.platform-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, transparent, rgba(248, 152, 30, 0.1));
-    opacity: 0;
-}
-
-.platform-card:hover {
-    border-color: var(--accent-gold);
-    box-shadow: 0 10px 30px rgba(248, 152, 30, 0.3);
+    justify-content: space-between;
 }
 
 
@@ -596,7 +997,7 @@ button {
     justify-content: center;
     padding: 1.25rem;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
+    border-radius: 10px;
 }
 
 .platform-card:hover .platform-icon {
@@ -626,26 +1027,33 @@ button {
     margin-bottom: var(--spacing-md);
     color: rgba(244, 229, 212, 0.9);
     line-height: 1.6;
+    flex-grow: 1;
 }
 
-.platform-link {
+/* Platform link - extends base .btn with secondary-like styling */
+.platform-link,
+.btn.platform-link {
+    /* Extends base .btn class */
     display: inline-block;
     padding: 0.75rem 2rem;
     background: transparent;
     border: 2px solid var(--accent-color);
     color: var(--accent-gold);
-    border-radius: 50px;
+    border-radius: 10px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-top: auto;
+    align-self: center;
 }
 
 .platform-link:hover {
     background: var(--accent-color);
     color: var(--primary-color);
+    /* Uses global hover animation from .btn:hover (transform and shimmer effect) */
 }
 
-/* Full-width merchandise card */
+/* Full-width merchandise card - extends .card-wide */
 .platform-card-wide {
     grid-column: 1 / -1;
     display: grid;
@@ -660,7 +1068,7 @@ button {
 
 .platform-banner {
     width: 100%;
-    border-radius: 15px;
+    border-radius: 10px;
     overflow: hidden;
     margin-bottom: var(--spacing-md);
     background: rgba(255, 255, 255, 0.05);
@@ -748,7 +1156,7 @@ button {
 .gallery-item {
     position: relative;
     background: rgba(0, 0, 0, 0.6);
-    border-radius: 15px;
+    border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
     border: 2px solid transparent;
@@ -776,8 +1184,6 @@ button {
     object-fit: contain;
 }
 
-.gallery-item:hover .gallery-item-image img {
-}
 
 .gallery-item-overlay {
     position: absolute;
@@ -794,8 +1200,6 @@ button {
     pointer-events: none;
 }
 
-.gallery-item:hover .gallery-item-overlay {
-}
 
 .gallery-item-icon {
     font-size: 2.5rem;
@@ -833,21 +1237,23 @@ button {
     margin-top: 2rem;
 }
 
-.load-more-btn {
+/* Load more button - extends base .btn and .btn-primary */
+.load-more-btn,
+.btn.load-more-btn {
+    /* Extends base .btn and .btn-primary classes */
     padding: 1rem 3rem;
     font-size: 1.1rem;
-    border-radius: 8px;
+    border-radius: 10px;
     min-width: 200px;
 }
 
 .load-more-btn:disabled {
+    /* Uses .btn-disabled styles from standardized system */
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-.load-more-btn:not(:disabled):hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
+/* Load more button uses global hover animation from .btn:hover */
 
 /* Loading and Error States */
 .gallery-loading,
@@ -890,8 +1296,6 @@ button {
     box-shadow: 0 6px 30px rgba(248, 152, 30, 0.6);
 }
 
-.carousel-btn:active {
-}
 
 .carousel-prev {
     left: -80px;
@@ -1056,7 +1460,9 @@ button {
     margin: 0 auto var(--spacing-md);
 }
 
+/* Booking form button - extends base .btn and .btn-primary with custom sizing */
 .booking-form .btn-primary {
+    /* Extends base .btn and .btn-primary classes */
     margin-top: 1.5rem;
     padding: 1.1rem 3rem;
     font-size: 1.15rem;
@@ -1201,7 +1607,10 @@ button {
     gap: 0.75rem;
 }
 
-.file-upload-button {
+/* File upload button - extends base .btn with custom styling */
+.file-upload-button,
+.btn.file-upload-button {
+    /* Extends base .btn class */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1209,13 +1618,12 @@ button {
     padding: 1.1rem 2.2rem;
     background: linear-gradient(135deg, rgba(248, 152, 30, 0.2), rgba(255, 215, 0, 0.2));
     border: 2px solid var(--accent-gold);
-    border-radius: 15px;
+    border-radius: 10px;
     color: var(--accent-gold);
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.1rem;
     font-weight: 600;
     letter-spacing: 1px;
-    cursor: pointer;
     box-shadow: 0 4px 15px rgba(248, 152, 30, 0.2);
 }
 
@@ -1223,7 +1631,7 @@ button {
     background: linear-gradient(135deg, rgba(248, 152, 30, 0.4), rgba(255, 215, 0, 0.4));
     border-color: var(--text-light);
     color: var(--text-light);
-    box-shadow: 0 6px 25px rgba(248, 152, 30, 0.4);
+    /* Uses global hover animation from .btn:hover (transform and shimmer effect) */
 }
 
 .file-upload-button::before {
@@ -1231,8 +1639,6 @@ button {
     font-size: 1.25rem;
 }
 
-.file-upload-button:hover::before {
-}
 
 .file-name-display {
     padding: 0.9rem 1.2rem;
@@ -1421,12 +1827,10 @@ button {
     max-width: 85%;
     max-height: 85vh;
     object-fit: contain;
-    border-radius: 15px;
+    border-radius: 10px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
 }
 
-#lightbox-image:hover {
-}
 
 /* ===========================
    Animations
@@ -1724,7 +2128,9 @@ button {
     letter-spacing: 0.3px;
 }
 
-.btn-primary {
+/* .btn-primary typography - can be overridden per section */
+.booking-form .btn-primary,
+.connect .btn-primary {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.1rem;
     font-weight: 600;
@@ -1746,7 +2152,7 @@ button {
 }
 
 .jotform-container iframe {
-    border-radius: 15px;
+    border-radius: 10px;
     overflow: hidden;
     display: block;
 }
@@ -1755,7 +2161,7 @@ button {
 .form-placeholder {
     background: linear-gradient(135deg, rgba(45, 27, 61, 0.9), rgba(26, 15, 36, 0.9));
     border: 2px dashed #d4af37;
-    border-radius: 15px;
+    border-radius: 10px;
     padding: 60px 40px;
     text-align: center;
     min-height: 500px;
@@ -1878,7 +2284,9 @@ button {
     margin-top: var(--spacing-md);
 }
 
+/* Form actions - extends base .btn with minimum width */
 .form-actions .btn {
+    /* Extends base .btn class */
     min-width: 250px;
 }
 
@@ -1983,53 +2391,13 @@ button {
     align-items: start;
 }
 
+/* Service card specific styles */
 .service-card {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(248, 152, 30, 0.1));
-    padding: var(--spacing-md);
-    border-radius: 15px;
-    border: 1px solid rgba(248, 152, 30, 0.3);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
     height: 100%;
 }
 
-.service-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, transparent, rgba(248, 152, 30, 0.1));
-    opacity: 0;
-}
-
-.service-card:hover {
-    border-color: var(--accent-gold);
-    box-shadow: 0 10px 30px rgba(248, 152, 30, 0.3);
-}
-
-
-.service-card-featured {
-    border: 2px solid var(--accent-gold);
-    background: linear-gradient(135deg, rgba(248, 152, 30, 0.15), rgba(255, 215, 0, 0.1));
-}
-
-.featured-badge {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: var(--accent-gold);
-    color: var(--primary-color);
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
+/* Deprecated: .service-card-featured - use .card-featured instead */
+/* Deprecated: .featured-badge - use .card-badge instead */
 
 .service-card-large {
     grid-column: span 1;
@@ -2037,6 +2405,7 @@ button {
 
 .service-card-info {
     grid-column: 1 / -1;
+    /* Extends .card-info for background and border styles */
     background: linear-gradient(135deg, rgba(248, 152, 30, 0.1), rgba(0, 0, 0, 0.6));
     border: 2px solid rgba(248, 152, 30, 0.4);
 }
@@ -2235,7 +2604,10 @@ button {
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), inset 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.auth-submit-btn {
+/* Auth submit button - extends base .btn with full width */
+.auth-submit-btn,
+.btn.auth-submit-btn {
+    /* Extends base .btn and .btn-primary classes */
     width: 100%;
     padding: 1.1rem 2rem;
     font-size: 1.1rem;
@@ -2244,16 +2616,13 @@ button {
     align-items: center;
     justify-content: center;
     gap: var(--spacing-sm);
-    position: relative;
-    overflow: hidden;
+    border-radius: 10px;
 }
 
 .auth-submit-btn .btn-icon {
     font-size: 1.5rem;
 }
 
-.auth-submit-btn:hover .btn-icon {
-}
 
 .auth-footer {
     padding-top: var(--spacing-md);
@@ -2267,8 +2636,6 @@ button {
 }
 
 /* CMS Dashboard Enhancements */
-.cms-dashboard {
-}
 
 
 .cms-section {
@@ -2314,19 +2681,13 @@ button {
     margin-bottom: var(--spacing-xl);
 }
 
+/* Stat card specific styles */
 .stat-card {
-    background: linear-gradient(135deg, rgba(248, 152, 30, 0.1), rgba(0, 0, 0, 0.6));
-    border: 2px solid rgba(248, 152, 30, 0.3);
-    border-radius: 15px;
     padding: var(--spacing-lg);
-    display: flex;
+    flex-direction: row;
     align-items: center;
     gap: var(--spacing-md);
-}
-
-.stat-card:hover {
-    border-color: var(--accent-gold);
-    box-shadow: 0 8px 25px rgba(248, 152, 30, 0.3);
+    background: linear-gradient(135deg, rgba(248, 152, 30, 0.1), rgba(0, 0, 0, 0.6));
 }
 
 .stat-card-action {
@@ -2359,12 +2720,16 @@ button {
     margin-top: 0.25rem;
 }
 
-.btn-logout {
+/* Logout button - extends base .btn with full width */
+.btn-logout,
+.btn.btn-logout {
+    /* Extends base .btn class */
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    border-radius: 10px;
 }
 
 /* CMS Sections */
@@ -2390,10 +2755,11 @@ button {
     font-size: 1.8rem;
 }
 
-/* Drag & Drop Upload Zone */
-.drop-zone {
+/* Drag & Drop Upload Zone - extends base .card */
+.drop-zone,
+.card.drop-zone {
     border: 3px dashed rgba(248, 152, 30, 0.4);
-    border-radius: 15px;
+    border-radius: 10px;
     padding: var(--spacing-xl);
     text-align: center;
     background: rgba(0, 0, 0, 0.3);
@@ -2402,6 +2768,8 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
+    /* Override card border for dashed style */
+    border-style: dashed;
 }
 
 .drop-zone:hover,
@@ -2468,19 +2836,21 @@ button {
     margin-bottom: var(--spacing-lg);
 }
 
-.file-preview-item {
+/* File preview item - extends base .card */
+.file-preview-item,
+.card.file-preview-item {
     position: relative;
     background: rgba(0, 0, 0, 0.6);
     border: 2px solid rgba(248, 152, 30, 0.3);
-    border-radius: 15px;
+    border-radius: 10px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    padding: 0;
 }
 
 .file-preview-item:hover {
-    border-color: var(--accent-gold);
-    box-shadow: 0 10px 30px rgba(248, 152, 30, 0.4);
+    /* Uses global hover animation from .card:hover */
 }
 
 .file-preview-item img {
@@ -2490,8 +2860,6 @@ button {
     background: rgba(0, 0, 0, 0.8);
 }
 
-.file-preview-item:hover img {
-}
 
 .file-preview-overlay {
     position: absolute;
@@ -2547,7 +2915,10 @@ button {
     box-shadow: 0 0 0 2px rgba(248, 152, 30, 0.2);
 }
 
-.file-remove-btn {
+/* File remove button - extends base .btn with danger styling */
+.file-remove-btn,
+.btn.file-remove-btn {
+    /* Extends base .btn and .btn-danger classes */
     position: absolute;
     top: 5px;
     right: 5px;
@@ -2561,6 +2932,8 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0;
+    min-width: unset;
 }
 
 .file-remove-btn:hover {
@@ -2683,11 +3056,7 @@ button {
     outline: none;
 }
 
-.btn-icon-only {
-    padding: 0.7rem;
-    font-size: 1.2rem;
-    min-width: unset;
-}
+/* .btn-icon-only now in standardized button system */
 
 /* Bulk Toolbar */
 .bulk-toolbar {
@@ -2727,13 +3096,14 @@ button {
     min-height: 300px;
 }
 
-.cms-image-card {
-    position: relative;
+/* CMS image card specific styles - extends base .card */
+.cms-image-card,
+.card.cms-image-card {
     background: rgba(0, 0, 0, 0.6);
-    border: 2px solid rgba(248, 152, 30, 0.3);
-    border-radius: 15px;
-    overflow: hidden;
+    padding: 0;
     cursor: move;
+    flex-direction: column;
+    border: 2px solid rgba(248, 152, 30, 0.3);
 }
 
 .cms-image-card:hover {
@@ -2793,8 +3163,6 @@ button {
     object-fit: cover;
 }
 
-.cms-image-card:hover .image-card-preview img {
-}
 
 .image-card-info {
     padding: var(--spacing-md);
@@ -2833,32 +3201,15 @@ button {
     gap: 0.2rem;
 }
 
+/* Image card actions - extends base .btn with very small size override */
 .image-card-actions .btn {
+    /* Extends base .btn class */
     padding: 0.15rem 0.3rem !important;
     font-size: 0.6rem !important;
     line-height: 1.2;
 }
 
-.btn-small {
-    padding: 0.15rem 0.35rem;
-    font-size: 0.65rem;
-}
-
-.btn-large {
-    padding: 1.2rem 2.5rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, #dc3545, #c82333);
-    color: white;
-}
-
-.btn-danger:hover {
-    background: linear-gradient(135deg, #c82333, #bd2130);
-    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
-}
+/* Button size and variant styles now in standardized button system above */
 
 /* Loading States */
 .gallery-loading {
@@ -2947,7 +3298,7 @@ button {
     position: relative;
     background: linear-gradient(135deg, rgba(26, 26, 46, 0.98), rgba(38, 38, 58, 0.98));
     border: 1px solid rgba(248, 152, 30, 0.3);
-    border-radius: 15px;
+    border-radius: 10px;
     padding: var(--spacing-lg);
     max-width: 600px;
     width: 90%;
@@ -3019,7 +3370,9 @@ button {
     margin-top: var(--spacing-lg);
 }
 
+/* Modal actions - extends base .btn with minimum width */
 .modal-actions .btn {
+    /* Extends base .btn class */
     min-width: 120px;
 }
 
