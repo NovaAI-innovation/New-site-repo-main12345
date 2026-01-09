@@ -202,7 +202,7 @@ button {
     font-weight: 700;
     margin-bottom: var(--spacing-md);
     margin-top: var(--spacing-lg);
-    color: var(--primary-color);
+    color: var(--accent-gold); /* All headers use yellow */
     line-height: 1.2;
 }
 
@@ -298,7 +298,7 @@ button.btn {
     padding: 1rem 2.25rem; /* More generous padding */
     font-size: 1rem;
     font-weight: 500;
-    border-radius: 10px;
+    border-radius: 8px; /* Smaller radius to match inputs */
     text-transform: uppercase;
     letter-spacing: 1px;
     text-align: center;
@@ -469,10 +469,14 @@ button.btn {
     width: 100%;
     height: 100%;
     background: var(--black-95);
-    display: flex;
+    display: none; /* Hidden by default to prevent flash */
     align-items: center;
     justify-content: center;
     z-index: 10000;
+}
+
+.age-modal:not(.hidden) {
+    display: flex; /* Show when not hidden */
 }
 
 .age-modal.hidden {
@@ -491,7 +495,7 @@ button.btn {
 .age-modal-content h2 {
     font-family: var(--font-serif);
     font-size: 2.5rem;
-    color: var(--primary-color);
+    color: var(--accent-gold); /* All headers use yellow */
     margin-bottom: var(--spacing-sm);
 }
 
@@ -786,7 +790,7 @@ button.btn {
 }
 
 .about .section-title {
-    color: var(--text-light);
+    color: var(--accent-gold); /* All headers use yellow */
 }
 
 .about .title-underline {
@@ -1110,7 +1114,7 @@ button.btn {
 }
 
 .platforms .section-title {
-    color: var(--text-light);
+    color: var(--accent-gold); /* All headers use yellow */
     text-shadow: 0 2px 10px var(--crimson-shadow);
 }
 
@@ -1199,7 +1203,7 @@ button.btn {
     background: transparent;
     border: 2px solid var(--accent-color);
     color: var(--accent-gold);
-    border-radius: 10px;
+    border-radius: 8px; /* Smaller radius to match inputs */
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -1291,7 +1295,7 @@ button.btn {
 }
 
 .gallery .section-title {
-    color: var(--text-light);
+    color: var(--accent-gold); /* All headers use yellow */
 }
 
 .gallery .section-subtitle {
@@ -1404,7 +1408,7 @@ button.btn {
     /* Extends base .btn and .btn-primary classes */
     padding: 1rem 3rem;
     font-size: 1.1rem;
-    border-radius: 10px;
+    border-radius: 8px; /* Smaller radius to match inputs */
     min-width: 200px;
 }
 
@@ -1587,7 +1591,7 @@ button.btn {
 }
 
 .connect .section-title {
-    color: var(--text-light);
+    color: var(--accent-gold); /* All headers use yellow */
 }
 
 .connect .section-subtitle {
@@ -1602,7 +1606,7 @@ button.btn {
     margin: calc(var(--spacing-md) * 1.5) auto;
     padding: calc(var(--spacing-lg) * 1.2);
     background: linear-gradient(135deg, var(--black-70), var(--accent-gold-10));
-    border-radius: 15px;
+    border-radius: 16px; /* Match input border-radius */
     border: 1px solid var(--accent-gold-30);
     box-shadow: 0 4px 20px var(--black-30);
 }
@@ -1641,7 +1645,7 @@ button.btn {
     width: 100%;
     padding: 1.2rem 1.8rem;
     border: 2px solid var(--accent-gold-40);
-    border-radius: 16px;
+    border-radius: 8px; /* Smaller radius */
     background: var(--bg-dark);
     color: var(--text-light);
     font-family: 'Inter', sans-serif;
@@ -1714,13 +1718,13 @@ button.btn {
     gap: var(--spacing-sm);
     color: var(--text-light);
     cursor: pointer;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-sans); /* Match platform body text font */
     font-size: 1.1rem;
     font-weight: 500;
     letter-spacing: 0.5px;
     padding: 0.75rem 1rem;
     background: var(--white-05);
-    border-radius: 10px;
+    border-radius: 16px; /* Match input border-radius */
 }
 
 .form-row-radio label:hover {
@@ -1739,7 +1743,7 @@ button.btn {
     display: block;
     margin-bottom: 0;
     color: var(--accent-gold);
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-sans); /* Match platform body text font */
     font-weight: 600;
     text-align: left; /* Form labels should remain left-aligned */
     font-size: 1.1rem;
@@ -1749,7 +1753,7 @@ button.btn {
 .form-row label small {
     color: rgba(244, 229, 212, 0.85);
     font-weight: 400;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-sans); /* Match platform body text font */
     font-size: 0.95rem;
     letter-spacing: 0.3px;
 }
@@ -1777,9 +1781,9 @@ button.btn {
     padding: 1.1rem 2.2rem;
     background: linear-gradient(135deg, var(--accent-gold-20), rgba(255, 215, 0, 0.2));
     border: 2px solid var(--accent-gold);
-    border-radius: 10px;
+    border-radius: 8px; /* Smaller radius to match inputs */
     color: var(--accent-gold);
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-sans); /* Match platform body text font */
     font-size: 1.1rem;
     font-weight: 600;
     letter-spacing: 1px;
@@ -1803,9 +1807,9 @@ button.btn {
     padding: 0.9rem 1.2rem;
     background: var(--white-05);
     border: 1px solid rgba(255, 215, 0, 0.3);
-    border-radius: 10px;
+    border-radius: 16px; /* Match input border-radius */
     color: var(--cream-90);
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-sans); /* Match platform body text font */
     font-size: 1rem;
     font-style: italic;
     text-align: center;
@@ -2050,7 +2054,7 @@ button.btn {
 
 .cms-section h2 {
     font-family: var(--font-serif);
-    color: var(--text-light);
+    color: var(--accent-gold); /* All headers use yellow */
     margin-bottom: var(--spacing-md);
     font-size: clamp(1.5rem, 4vw, 2rem);
 }
@@ -2066,23 +2070,60 @@ button.btn {
     font-weight: 500;
 }
 
+/* Unified styling for CMS form inputs - matches booking form */
 .form-group input,
+.form-group select,
 .form-group textarea {
     width: 100%;
-    padding: var(--spacing-sm);
-    border: 1px solid var(--white-20);
-    border-radius: 5px;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 1.2rem 1.8rem;
+    border: 2px solid var(--accent-gold-40);
+    border-radius: 8px; /* Smaller radius */
+    background: var(--bg-dark);
     color: var(--text-light);
-    font-family: var(--font-sans);
+    font-family: 'Inter', sans-serif;
     font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-normal);
+}
+
+.form-group select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FFD700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 20px;
+    padding-right: 3rem;
+}
+
+.form-group select option {
+    background-color: var(--bg-dark);
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    padding: 0.75rem;
+    font-weight: 400;
 }
 
 .form-group input:focus,
+.form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 2px var(--accent-gold-20);
+    border-color: var(--accent-gold);
+    background: var(--bg-dark);
+    box-shadow: 0 0 25px var(--gold-40), 0 6px 20px var(--black-30), inset 0 1px 2px rgba(255, 255, 255, 0.15);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: rgba(244, 229, 212, 0.7);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
 }
 
 .form-group textarea {
@@ -2186,15 +2227,28 @@ button.btn {
     flex-wrap: wrap;
 }
 
+/* Unified styling for caption edit input - matches booking form */
 .caption-edit {
     width: 100%;
-    padding: var(--spacing-xs);
-    border: 1px solid var(--white-20);
-    border-radius: 3px;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 1.2rem 1.8rem;
+    border: 2px solid var(--accent-gold-40);
+    border-radius: 8px; /* Smaller radius */
+    background: var(--bg-dark);
     color: var(--text-light);
-    font-family: var(--font-sans);
-    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-normal);
+}
+
+.caption-edit:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+    background: var(--bg-dark);
+    box-shadow: 0 0 25px var(--gold-40), 0 6px 20px var(--black-30), inset 0 1px 2px rgba(255, 255, 255, 0.15);
 }
 
 /* Emoji Picker Styles */
@@ -2674,11 +2728,12 @@ button.btn {
    =========================== */
 
 .connect .section-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-serif);
     font-weight: 700;
     font-size: clamp(2.5rem, 6vw, 4rem);
     letter-spacing: 2px;
     text-shadow: 0 3px 15px var(--accent-gold-50);
+    color: var(--accent-gold); /* All headers use yellow */
 }
 
 .connect .section-subtitle {
@@ -2690,20 +2745,20 @@ button.btn {
 }
 
 .booking-form label {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-sans); /* Match platform body text font */
     font-size: 1.1rem;
     font-weight: 600;
     letter-spacing: 0.5px;
 }
 
 .form-row-radio label {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-sans); /* Match platform body text font */
     font-size: 1.05rem;
     letter-spacing: 0.3px;
 }
 
 .booking-note {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-sans); /* Match platform body text font */
     font-style: italic;
     letter-spacing: 0.3px;
 }
@@ -2711,7 +2766,7 @@ button.btn {
 /* .btn-primary typography - can be overridden per section */
 .booking-form .btn-primary,
 .connect .btn-primary {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-sans); /* Match platform body text font */
     font-size: 1.1rem;
     font-weight: 600;
     letter-spacing: 1.5px;
@@ -2755,7 +2810,7 @@ button.btn {
 }
 
 .placeholder-content h3 {
-    color: #d4af37;
+    color: var(--accent-gold); /* All headers use yellow */
     font-size: 2rem;
     margin-bottom: 20px;
     font-family: 'Playfair Display', serif;
@@ -3137,26 +3192,36 @@ button.btn {
     letter-spacing: 1px;
 }
 
+/* Unified styling for auth form inputs - matches booking form */
 .auth-form input[type="password"] {
     width: 100%;
-    padding: 1rem 1.2rem;
-    background: var(--black-50);
-    border: 2px solid var(--accent-gold-30);
-    border-radius: 12px;
+    padding: 1.2rem 1.8rem;
+    border: 2px solid var(--accent-gold-40);
+    border-radius: 8px; /* Smaller radius */
+    background: var(--bg-dark);
     color: var(--text-light);
+    font-family: 'Inter', sans-serif;
     font-size: 1rem;
-    box-shadow: inset 0 2px 8px var(--black-30);
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-normal);
 }
 
 .auth-form input[type="password"]::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(244, 229, 212, 0.7);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
 }
 
 .auth-form input[type="password"]:focus {
     outline: none;
     border-color: var(--accent-gold);
-    background: var(--black-60);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), inset 0 2px 8px var(--black-30);
+    background: var(--bg-dark);
+    box-shadow: 0 0 25px var(--gold-40), 0 6px 20px var(--black-30), inset 0 1px 2px rgba(255, 255, 255, 0.15);
 }
 
 /* Auth submit button - extends base .btn with full width */
@@ -3171,7 +3236,7 @@ button.btn {
     align-items: center;
     justify-content: center;
     gap: var(--spacing-sm);
-    border-radius: 10px;
+    border-radius: 8px; /* Smaller radius to match inputs */
 }
 
 .auth-submit-btn .btn-icon {
@@ -3284,7 +3349,7 @@ button.btn {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: 10px;
+    border-radius: 8px; /* Smaller radius to match inputs */
 }
 
 /* CMS Sections */
@@ -3442,29 +3507,39 @@ button.btn {
     padding: 0.5rem;
 }
 
+/* Unified styling for file preview caption input - matches booking form */
 .file-preview-caption-input {
     width: 100%;
-    padding: 0.6rem 0.8rem;
-    border: 1px solid var(--accent-gold-30);
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 1.2rem 1.8rem;
+    border: 2px solid var(--accent-gold-40);
+    border-radius: 8px; /* Smaller radius */
+    background: var(--bg-dark);
     color: var(--text-light);
-    font-family: var(--font-sans);
-    font-size: 0.85rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-normal);
     resize: vertical;
-    min-height: 60px;
+    min-height: 100px;
     line-height: 1.5;
 }
 
 .file-preview-caption-input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(244, 229, 212, 0.7);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
 }
 
 .file-preview-caption-input:focus {
     outline: none;
-    border-color: var(--accent-color);
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 0 2px var(--accent-gold-20);
+    border-color: var(--accent-gold);
+    background: var(--bg-dark);
+    box-shadow: 0 0 25px var(--gold-40), 0 6px 20px var(--black-30), inset 0 1px 2px rgba(255, 255, 255, 0.15);
 }
 
 /* File remove button - extends base .btn with danger styling */
@@ -3517,20 +3592,36 @@ button.btn {
     margin-bottom: var(--spacing-md);
 }
 
+/* Unified styling for upload options input - matches booking form */
 .upload-options input {
     width: 100%;
-    padding: 0.875rem 1.2rem;
-    background: var(--black-50);
-    border: 2px solid var(--accent-gold-30);
-    border-radius: 10px;
+    padding: 1.2rem 1.8rem;
+    border: 2px solid var(--accent-gold-40);
+    border-radius: 8px; /* Smaller radius */
+    background: var(--bg-dark);
     color: var(--text-light);
+    font-family: 'Inter', sans-serif;
     font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-normal);
+}
+
+.upload-options input::placeholder {
+    color: rgba(244, 229, 212, 0.7);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
 }
 
 .upload-options input:focus {
-    border-color: var(--accent-gold);
     outline: none;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    border-color: var(--accent-gold);
+    background: var(--bg-dark);
+    box-shadow: 0 0 25px var(--gold-40), 0 6px 20px var(--black-30), inset 0 1px 2px rgba(255, 255, 255, 0.15);
 }
 
 /* Gallery Header */
@@ -3564,21 +3655,37 @@ button.btn {
     position: relative;
 }
 
+/* Unified styling for search box input - matches booking form */
 .search-box input {
-    padding: 0.7rem 2.5rem 0.7rem 1rem;
-    background: var(--black-50);
-    border: 2px solid var(--accent-gold-30);
-    border-radius: 25px;
+    padding: 1.2rem 2.5rem 1.2rem 1.8rem;
+    border: 2px solid var(--accent-gold-40);
+    border-radius: 8px; /* Smaller radius */
+    background: var(--bg-dark);
     color: var(--text-light);
-    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-normal);
     width: 250px;
 }
 
+.search-box input::placeholder {
+    color: rgba(244, 229, 212, 0.7);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
 .search-box input:focus {
-    border-color: var(--accent-gold);
     outline: none;
+    border-color: var(--accent-gold);
+    background: var(--bg-dark);
     width: 300px;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 25px var(--gold-40), 0 6px 20px var(--black-30), inset 0 1px 2px rgba(255, 255, 255, 0.15);
 }
 
 .search-icon {
@@ -3589,23 +3696,33 @@ button.btn {
     pointer-events: none;
 }
 
+/* Unified styling for sort select - matches booking form */
 .sort-select {
-    padding: 0.7rem 2.5rem 0.7rem 1rem;
-    background: var(--black-50);
-    border: 2px solid var(--accent-gold-30);
-    border-radius: 25px;
+    padding: 1.2rem 3rem 1.2rem 1.8rem;
+    background: var(--bg-dark);
+    border: 2px solid var(--accent-gold-40);
+    border-radius: 8px; /* Smaller radius */
     color: var(--text-light);
-    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
     cursor: pointer;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FFD700' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-normal);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FFD700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 12px center;
+    background-position: right 1rem center;
+    background-size: 20px;
 }
 
 .sort-select:focus {
-    border-color: var(--accent-gold);
     outline: none;
+    border-color: var(--accent-gold);
+    background: var(--bg-dark);
+    box-shadow: 0 0 25px var(--gold-40), 0 6px 20px var(--black-30), inset 0 1px 2px rgba(255, 255, 255, 0.15);
 }
 
 /* .btn-icon-only now in standardized button system */
@@ -4011,7 +4128,7 @@ button.btn {
 }
 
 .modal-content h3 {
-    color: var(--text-light);
+    color: var(--accent-gold); /* All headers use yellow */
     font-family: var(--font-serif);
     font-size: 1.8rem;
     margin-bottom: var(--spacing-md);
@@ -4046,23 +4163,38 @@ button.btn {
     margin-bottom: var(--spacing-xs);
 }
 
+/* Unified styling for modal textarea - matches booking form */
 .modal-content textarea {
     width: 100%;
-    padding: var(--spacing-sm);
-    background: var(--white-05);
-    border: 1px solid var(--accent-gold-30);
-    border-radius: 8px;
+    padding: 1.2rem 1.8rem;
+    border: 2px solid var(--accent-gold-40);
+    border-radius: 8px; /* Smaller radius */
+    background: var(--bg-dark);
     color: var(--text-light);
-    font-family: var(--font-sans);
+    font-family: 'Inter', sans-serif;
     font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-normal);
     resize: vertical;
-    min-height: 80px;
+    min-height: 100px;
+}
+
+.modal-content textarea::placeholder {
+    color: rgba(244, 229, 212, 0.7);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
 }
 
 .modal-content textarea:focus {
     outline: none;
     border-color: var(--accent-gold);
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--bg-dark);
+    box-shadow: 0 0 25px var(--gold-40), 0 6px 20px var(--black-30), inset 0 1px 2px rgba(255, 255, 255, 0.15);
 }
 
 .modal-actions {

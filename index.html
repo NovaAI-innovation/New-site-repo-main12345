@@ -17,6 +17,55 @@
             height: 100%;
         }
     </style>
+    <!-- Prevent age modal flash - check localStorage immediately -->
+    <script>
+        (function() {
+            try {
+                const verificationData = localStorage.getItem('ageVerified');
+                if (verificationData) {
+                    try {
+                        const data = JSON.parse(verificationData);
+                        if (data.timestamp && typeof data.timestamp === 'number') {
+                            const now = Date.now();
+                            const expirationTime = data.timestamp + (30 * 24 * 60 * 60 * 1000); // 30 days
+                            if (now <= expirationTime) {
+                                // Hide modal immediately to prevent flash
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const modal = document.getElementById('age-modal');
+                                    if (modal) {
+                                        modal.style.display = 'none';
+                                        modal.classList.add('hidden');
+                                    }
+                                });
+                                // Also try immediately if modal exists
+                                if (document.getElementById('age-modal')) {
+                                    document.getElementById('age-modal').style.display = 'none';
+                                    document.getElementById('age-modal').classList.add('hidden');
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        // Check old format
+                        if (verificationData === 'true') {
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const modal = document.getElementById('age-modal');
+                                if (modal) {
+                                    modal.style.display = 'none';
+                                    modal.classList.add('hidden');
+                                }
+                            });
+                            if (document.getElementById('age-modal')) {
+                                document.getElementById('age-modal').style.display = 'none';
+                                document.getElementById('age-modal').classList.add('hidden');
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                // Silently fail
+            }
+        })();
+    </script>
 </head>
 <body data-page="home">
     <!-- Age Verification Modal -->

@@ -12,6 +12,50 @@
     <link rel="dns-prefetch" href="https://res.cloudinary.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <!-- Prevent age modal flash - check localStorage immediately -->
+    <script>
+        (function() {
+            try {
+                const verificationData = localStorage.getItem('ageVerified');
+                if (verificationData) {
+                    try {
+                        const data = JSON.parse(verificationData);
+                        if (data.timestamp && typeof data.timestamp === 'number') {
+                            const now = Date.now();
+                            const expirationTime = data.timestamp + (30 * 24 * 60 * 60 * 1000);
+                            if (now <= expirationTime) {
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const modal = document.getElementById('age-modal');
+                                    if (modal) {
+                                        modal.style.display = 'none';
+                                        modal.classList.add('hidden');
+                                    }
+                                });
+                                if (document.getElementById('age-modal')) {
+                                    document.getElementById('age-modal').style.display = 'none';
+                                    document.getElementById('age-modal').classList.add('hidden');
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        if (verificationData === 'true') {
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const modal = document.getElementById('age-modal');
+                                if (modal) {
+                                    modal.style.display = 'none';
+                                    modal.classList.add('hidden');
+                                }
+                            });
+                            if (document.getElementById('age-modal')) {
+                                document.getElementById('age-modal').style.display = 'none';
+                                document.getElementById('age-modal').classList.add('hidden');
+                            }
+                        }
+                    }
+                }
+            } catch (error) {}
+        })();
+    </script>
 </head>
 <body data-page="gallery">
     <!-- Age Verification Modal -->

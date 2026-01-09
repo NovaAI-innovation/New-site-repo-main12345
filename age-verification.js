@@ -282,6 +282,7 @@
         showModal: function() {
             if (state.modal) {
                 state.modal.classList.remove('hidden');
+                state.modal.style.display = 'flex'; // Explicitly show modal
                 // Focus on confirm button for accessibility
                 if (state.confirmButton) {
                     state.confirmButton.focus();
@@ -295,6 +296,7 @@
         hideModal: function() {
             if (state.modal) {
                 state.modal.classList.add('hidden');
+                state.modal.style.display = 'none'; // Explicitly hide modal
             }
         },
         
@@ -409,6 +411,56 @@
             Object.assign(CONFIG, options);
         }
     };
+
+    // ===========================
+    // Immediate check to prevent flash
+    // Check localStorage immediately before DOM is ready
+    // ===========================
+    (function immediateCheck() {
+        try {
+            const storageObj = CONFIG.STORAGE_TYPE === 'localStorage' 
+                ? localStorage 
+                : sessionStorage;
+            const verificationData = storageObj.getItem(CONFIG.STORAGE_KEY);
+            
+            if (verificationData) {
+                try {
+                    const data = JSON.parse(verificationData);
+                    if (data.timestamp && typeof data.timestamp === 'number') {
+                        const now = Date.now();
+                        const expirationTime = data.timestamp + CONFIG.EXPIRATION_MS;
+                        if (now <= expirationTime) {
+                            // User is verified - hide modal immediately
+                            document.addEventListener('DOMContentLoaded', () => {
+                                const modal = document.getElementById('age-modal');
+                                if (modal) {
+                                    modal.style.display = 'none';
+                                    modal.classList.add('hidden');
+                                }
+                            });
+                            // Also try to hide immediately if modal exists
+                            const modal = document.getElementById('age-modal');
+                            if (modal) {
+                                modal.style.display = 'none';
+                                modal.classList.add('hidden');
+                            }
+                        }
+                    }
+                } catch (e) {
+                    // Check old format
+                    if (verificationData === 'true') {
+                        const modal = document.getElementById('age-modal');
+                        if (modal) {
+                            modal.style.display = 'none';
+                            modal.classList.add('hidden');
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            // Silently fail - will be handled by main init
+        }
+    })();
 
     // ===========================
     // Auto-initialize on DOM ready
