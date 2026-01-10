@@ -58,13 +58,32 @@
 <body data-page="services">
     <!-- Age Verification Modal -->
     <div id="age-modal" class="age-modal">
+        <div class="age-modal-backdrop"></div>
         <div class="age-modal-content">
-            <h2>Age Verification</h2>
-            <p>This website contains content intended for adults only.</p>
-            <p>Please confirm you are 18 years or older to continue.</p>
+            <div class="age-modal-decoration">
+                <div class="age-modal-icon">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 6v6l4 2"></path>
+                    </svg>
+                </div>
+            </div>
+            <h2 class="age-modal-title">Age Verification Required</h2>
+            <div class="age-modal-divider"></div>
+            <p class="age-modal-text">This website contains adult content and is intended for mature audiences only.</p>
+            <p class="age-modal-highlight">Please confirm you are <span class="age-number">18</span> years or older to continue.</p>
             <div class="age-modal-buttons">
-                <button id="age-confirm" class="btn btn-primary">I am 18+</button>
-                <button id="age-decline" class="btn btn-secondary">Exit</button>
+                <button id="age-confirm" class="btn btn-age-confirm">
+                    <span class="btn-icon">✓</span>
+                    <span>I am 18 or Older</span>
+                </button>
+                <button id="age-decline" class="btn btn-age-decline">
+                    <span class="btn-icon">✕</span>
+                    <span>Exit Site</span>
+                </button>
+            </div>
+            <div class="age-modal-footer">
+                <p>By entering, you agree that you are of legal age in your jurisdiction</p>
             </div>
         </div>
     </div>
@@ -435,6 +454,7 @@
 
     <!-- Main JavaScript -->
     <script src="api-config.js"></script>
+    <script src="services-layout.js"></script>
     <script src="age-verification.js"></script>
     <script src="script.js"></script>
 </body>

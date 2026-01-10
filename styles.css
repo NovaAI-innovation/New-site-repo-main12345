@@ -459,7 +459,7 @@ button.btn {
 }
 
 /* ===========================
-   Age Verification Modal
+   Age Verification Modal - Gold Shimmer Theme
    =========================== */
 
 .age-modal {
@@ -468,48 +468,424 @@ button.btn {
     left: 0;
     width: 100%;
     height: 100%;
-    background: var(--black-95);
     display: none; /* Hidden by default to prevent flash */
     align-items: center;
     justify-content: center;
     z-index: 10000;
+    overflow: hidden;
 }
 
 .age-modal:not(.hidden) {
-    display: flex; /* Show when not hidden */
+    display: flex; /* Show when not hidden - no animation */
 }
 
 .age-modal.hidden {
     display: none;
 }
 
+/* Solid gold-themed backdrop - completely blocks content */
+.age-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 30% 20%, rgba(255, 215, 0, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(248, 152, 30, 0.12) 0%, transparent 50%),
+        linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%);
+    animation: goldShimmer 8s ease-in-out infinite;
+}
+
+/* Shimmer animation for backdrop */
+@keyframes goldShimmer {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Modal content container with tighter radius */
 .age-modal-content {
-    background: var(--bg-light);
-    padding: var(--spacing-lg);
-    border-radius: 20px;
-    max-width: 500px;
+    position: relative;
+    background: linear-gradient(135deg,
+        #1a1a1a 0%,
+        #000000 100%);
+    padding: calc(var(--spacing-xl) * 1.5);
+    border-radius: 16px; /* Tighter radius */
+    max-width: 600px;
+    width: 90%;
     text-align: center;
-    box-shadow: 0 10px 40px var(--black-30);
+    box-shadow:
+        0 0 60px rgba(255, 215, 0, 0.3),
+        0 20px 60px rgba(0, 0, 0, 0.9),
+        inset 0 1px 0 rgba(255, 215, 0, 0.2);
+    border: 2px solid var(--accent-gold);
+    animation: modalShimmer 3s ease-in-out infinite;
+    overflow: hidden;
 }
 
-.age-modal-content h2 {
+@keyframes modalShimmer {
+    0%, 100% {
+        box-shadow:
+            0 0 60px rgba(255, 215, 0, 0.3),
+            0 20px 60px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(255, 215, 0, 0.2);
+    }
+    50% {
+        box-shadow:
+            0 0 80px rgba(255, 215, 0, 0.5),
+            0 20px 60px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(255, 215, 0, 0.3);
+    }
+}
+
+/* Decorative shimmer overlay */
+.age-modal-content::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 215, 0, 0.1) 50%,
+        transparent 70%
+    );
+    animation: shimmerMove 3s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes shimmerMove {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Icon decoration with gold shimmer */
+.age-modal-decoration {
+    position: relative;
+    margin-bottom: var(--spacing-md);
+    z-index: 1;
+}
+
+.age-modal-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    border: 3px solid var(--accent-gold);
+    color: var(--accent-gold);
+    animation: iconGoldPulse 3s ease-in-out infinite;
+    box-shadow:
+        0 0 40px rgba(255, 215, 0, 0.4),
+        inset 0 0 30px rgba(255, 215, 0, 0.15);
+}
+
+@keyframes iconGoldPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow:
+            0 0 40px rgba(255, 215, 0, 0.4),
+            inset 0 0 30px rgba(255, 215, 0, 0.15);
+        border-color: var(--accent-gold);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow:
+            0 0 60px rgba(255, 215, 0, 0.6),
+            inset 0 0 40px rgba(255, 215, 0, 0.25);
+        border-color: #FFD700;
+    }
+}
+
+.age-modal-icon svg {
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+    animation: svgShimmer 2s ease-in-out infinite;
+}
+
+@keyframes svgShimmer {
+    0%, 100% {
+        filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+    }
+    50% {
+        filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.8));
+    }
+}
+
+/* Title styling with gold shimmer */
+.age-modal-title {
+    position: relative;
     font-family: var(--font-serif);
-    font-size: 2.5rem;
-    color: var(--accent-gold); /* All headers use yellow */
-    margin-bottom: var(--spacing-sm);
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 700;
+    background: linear-gradient(90deg, #FFD700, #F8981E, #FFD700);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--spacing-md);
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    letter-spacing: 1px;
+    animation: goldTextShimmer 3s linear infinite;
+    z-index: 1;
 }
 
-.age-modal-content p {
+@keyframes goldTextShimmer {
+    0% {
+        background-position: 0% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+/* Decorative divider with shimmer */
+.age-modal-divider {
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        #FFD700 50%,
+        transparent 100%);
+    margin: var(--spacing-md) auto;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+    position: relative;
+    animation: dividerGlow 2s ease-in-out infinite;
+    z-index: 1;
+}
+
+@keyframes dividerGlow {
+    0%, 100% {
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        opacity: 0.8;
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.9);
+        opacity: 1;
+    }
+}
+
+/* Text content */
+.age-modal-text {
+    position: relative;
     margin-bottom: var(--spacing-sm);
     font-size: 1.1rem;
-    color: var(--color-text-muted-light);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    z-index: 1;
 }
 
+.age-modal-highlight {
+    position: relative;
+    margin: var(--spacing-md) 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-light);
+    z-index: 1;
+}
+
+/* Age number - no box, just glowing gold text */
+.age-number {
+    display: inline;
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #FFD700, #F8981E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    animation: numberShimmer 2s ease-in-out infinite;
+}
+
+@keyframes numberShimmer {
+    0%, 100% {
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        filter: brightness(1);
+    }
+    50% {
+        text-shadow: 0 0 30px rgba(255, 215, 0, 0.9);
+        filter: brightness(1.2);
+    }
+}
+
+/* Button container */
 .age-modal-buttons {
+    position: relative;
     display: flex;
+    flex-direction: column;
     gap: var(--spacing-sm);
-    margin-top: var(--spacing-md);
+    margin-top: calc(var(--spacing-lg) * 1.5);
+    margin-bottom: var(--spacing-md);
+    z-index: 1;
+}
+
+/* Confirm button with gold shimmer */
+.btn-age-confirm {
+    position: relative;
+    display: flex;
+    align-items: center;
     justify-content: center;
+    gap: var(--spacing-xs);
+    width: 100%;
+    padding: 1.2rem 2rem;
+    background: linear-gradient(135deg, #FFD700 0%, #F8981E 100%);
+    color: #000000;
+    border: 2px solid #FFD700;
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow:
+        0 4px 20px rgba(255, 215, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    overflow: hidden;
+    animation: buttonPulse 3s ease-in-out infinite;
+}
+
+.btn-age-confirm::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 70%
+    );
+    animation: buttonShimmer 2s linear infinite;
+}
+
+@keyframes buttonShimmer {
+    0% {
+        transform: translateX(-100%) translateY(-100%);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%);
+    }
+}
+
+@keyframes buttonPulse {
+    0%, 100% {
+        box-shadow:
+            0 4px 20px rgba(255, 215, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        box-shadow:
+            0 6px 30px rgba(255, 215, 0, 0.7),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+}
+
+.btn-age-confirm:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 8px 35px rgba(255, 215, 0, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    background: linear-gradient(135deg, #FFD700 0%, #FFD700 100%);
+    border-color: #FFD700;
+}
+
+.btn-age-confirm:active {
+    transform: translateY(-1px);
+}
+
+.btn-age-confirm .btn-icon {
+    position: relative;
+    font-size: 1.4rem;
+    font-weight: bold;
+    z-index: 1;
+}
+
+.btn-age-confirm span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Decline button with gold accents */
+.btn-age-decline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    width: 100%;
+    padding: 1rem 2rem;
+    background: transparent;
+    color: rgba(255, 215, 0, 0.8);
+    border: 2px solid rgba(255, 215, 0, 0.4);
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-age-decline:hover {
+    background: rgba(255, 215, 0, 0.1);
+    color: #FFD700;
+    border-color: rgba(255, 215, 0, 0.7);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.btn-age-decline:active {
+    transform: translateY(0);
+}
+
+.btn-age-decline .btn-icon {
+    font-size: 1.2rem;
+}
+
+/* Footer text with gold accent */
+.age-modal-footer {
+    position: relative;
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid rgba(255, 215, 0, 0.2);
+    z-index: 1;
+}
+
+.age-modal-footer p {
+    font-size: 0.85rem;
+    color: rgba(255, 215, 0, 0.6);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    .age-modal-buttons {
+        flex-direction: row;
+    }
+
+    .btn-age-confirm {
+        flex: 2;
+    }
+
+    .btn-age-decline {
+        flex: 1;
+    }
 }
 
 /* ===========================
@@ -1332,6 +1708,12 @@ button.btn {
     border-color: var(--accent-gold);
 }
 
+/* Shimmer loading state */
+.gallery-item.loading {
+    background: linear-gradient(135deg, var(--black-80) 0%, var(--black-60) 100%);
+    border-color: rgba(255, 215, 0, 0.1);
+}
+
 .gallery-item-image {
     position: relative;
     width: 100%;
@@ -1342,6 +1724,51 @@ button.btn {
     contain: layout style paint;
     /* Smooth placeholder background */
     background-image: linear-gradient(135deg, var(--black-80) 0%, var(--black-60) 100%);
+}
+
+/* Shimmer animation for loading state */
+.gallery-item.loading .gallery-item-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 215, 0, 0.15) 25%,
+        rgba(255, 215, 0, 0.25) 50%,
+        rgba(255, 215, 0, 0.15) 75%,
+        transparent 100%
+    );
+    animation: shimmer 2s infinite;
+    z-index: 1;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Pulsing border for loading state */
+.gallery-item.loading {
+    animation: loadingPulse 2s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+    0%, 100% {
+        border-color: rgba(255, 215, 0, 0.1);
+        box-shadow: 0 0 0 rgba(255, 215, 0, 0);
+    }
+    50% {
+        border-color: rgba(255, 215, 0, 0.3);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    }
 }
 
 .gallery-item-image img {

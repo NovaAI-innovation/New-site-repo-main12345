@@ -6,10 +6,13 @@
     <title>Makayla Moon | Gallery</title>
     <meta name="description" content="A curated collection of Makayla Moon's exclusive work and photography.">
     <link rel="stylesheet" href="styles.css">
+    <!-- Preconnect to critical domains for faster loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+    <link rel="preconnect" href="https://backend-bmad-exp.vercel.app" crossorigin>
     <link rel="dns-prefetch" href="https://res.cloudinary.com">
+    <link rel="dns-prefetch" href="https://backend-bmad-exp.vercel.app">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <!-- Prevent age modal flash - check localStorage immediately -->
@@ -60,13 +63,32 @@
 <body data-page="gallery">
     <!-- Age Verification Modal -->
     <div id="age-modal" class="age-modal">
+        <div class="age-modal-backdrop"></div>
         <div class="age-modal-content">
-            <h2>Age Verification</h2>
-            <p>This website contains content intended for adults only.</p>
-            <p>Please confirm you are 18 years or older to continue.</p>
+            <div class="age-modal-decoration">
+                <div class="age-modal-icon">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 6v6l4 2"></path>
+                    </svg>
+                </div>
+            </div>
+            <h2 class="age-modal-title">Age Verification Required</h2>
+            <div class="age-modal-divider"></div>
+            <p class="age-modal-text">This website contains adult content and is intended for mature audiences only.</p>
+            <p class="age-modal-highlight">Please confirm you are <span class="age-number">18</span> years or older to continue.</p>
             <div class="age-modal-buttons">
-                <button id="age-confirm" class="btn btn-primary">I am 18+</button>
-                <button id="age-decline" class="btn btn-secondary">Exit</button>
+                <button id="age-confirm" class="btn btn-age-confirm">
+                    <span class="btn-icon">✓</span>
+                    <span>I am 18 or Older</span>
+                </button>
+                <button id="age-decline" class="btn btn-age-decline">
+                    <span class="btn-icon">✕</span>
+                    <span>Exit Site</span>
+                </button>
+            </div>
+            <div class="age-modal-footer">
+                <p>By entering, you agree that you are of legal age in your jurisdiction</p>
             </div>
         </div>
     </div>
@@ -132,10 +154,11 @@
 
     <!-- Main JavaScript -->
     <!-- API Configuration (must load first) -->
-    <script src="api-config.js"></script>
-    <script src="age-verification.js"></script>
-    <script src="gallery-api.js"></script>
-    <script src="gallery-lightbox.js"></script>
-    <script src="script.js"></script>
+    <script src="api-config.js" defer></script>
+    <script src="age-verification.js" defer></script>
+    <script src="gallery-api.js" defer></script>
+    <script src="gallery-lightbox.js" defer></script>
+    <script src="gallery-carousel.js" defer></script>
+    <script src="script.js" defer></script>
 </body>
 </html>

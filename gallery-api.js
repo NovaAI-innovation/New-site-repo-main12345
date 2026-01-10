@@ -60,21 +60,21 @@ let lazyLoadObserver = null;
 
 /**
  * Initialize Intersection Observer for lazy loading
- * Uses dynamic rootMargin based on connection speed
+ * Uses minimal rootMargin for maximum performance - load only when needed
  */
 function initLazyLoadObserver() {
     if (lazyLoadObserver) return lazyLoadObserver;
-    
+
     if (!('IntersectionObserver' in window)) {
         return null;
     }
-    
-    // Dynamic rootMargin based on connection speed
-    let rootMargin = '50px'; // Default
+
+    // Minimal rootMargin for lazy loading - only load when close to viewport
+    let rootMargin = '0px'; // Default - load only when entering viewport
     if (NetworkInfo.isSlowConnection()) {
-        rootMargin = '100px'; // Load earlier on slow connections
+        rootMargin = '50px'; // Slightly earlier on slow connections
     } else if (NetworkInfo.isFastConnection()) {
-        rootMargin = '200px'; // Preload more aggressively on fast connections
+        rootMargin = '100px'; // Moderate preload on fast connections
     }
     
     lazyLoadObserver = new IntersectionObserver((entries) => {
@@ -83,18 +83,25 @@ function initLazyLoadObserver() {
                 const img = entry.target;
                 const imageUrl = img.dataset.originalUrl;
                 const thumbnailUrl = img.dataset.thumbnailUrl;
-                
+
                 if (thumbnailUrl && !img.dataset.loaded) {
                     // Mark as loading to prevent duplicate requests
                     if (!imageLoadingState.has(imageUrl)) {
                         imageLoadingState.set(imageUrl, { loading: true, loaded: false, retries: 0 });
-                        
+
+                        // Find parent gallery item to remove loading class
+                        const galleryItem = img.closest('.gallery-item');
+
                         // Load thumbnail
                         const tempImg = new Image();
                         tempImg.onload = () => {
                             img.src = thumbnailUrl;
                             img.dataset.loaded = 'true';
                             imageLoadingState.set(imageUrl, { loading: false, loaded: true, retries: 0 });
+                            // Remove loading shimmer when image loads
+                            if (galleryItem) {
+                                galleryItem.classList.remove('loading');
+                            }
                             lazyLoadObserver.unobserve(img);
                         };
                         tempImg.onerror = () => {
@@ -277,31 +284,31 @@ NetworkInfo.init();
 
 /**
  * Cloudinary transformation configurations
- * Optimized for different connection speeds and device types
+ * Ultra-optimized for fastest possible loading
  */
 const CLOUDINARY_TRANSFORMS = {
-    // Ultra-small blur placeholder (always use for initial load)
-    blur: 'c_fill,w_20,h_20,q_auto:low,f_auto,blur_300',
-    
-    // Thumbnail sizes - responsive based on viewport
+    // Tiny blur placeholder for instant loading (8x8 pixels)
+    blur: 'c_fill,w_8,h_8,q_auto:low,f_webp,e_blur:1000',
+
+    // Thumbnail sizes - heavily optimized, WebP format
     thumbnail: {
-        slow: 'c_fill,w_300,h_300,q_auto:low,f_auto', // Slow connections
-        normal: 'c_fill,w_400,h_400,q_auto,f_auto', // Normal connections
-        fast: 'c_fill,w_500,h_500,q_auto:best,f_auto' // Fast connections
+        slow: 'c_fill,w_250,h_250,q_auto:eco,f_webp', // Slow connections - smaller + lower quality
+        normal: 'c_fill,w_350,h_350,q_auto:low,f_webp', // Normal connections - reduced size
+        fast: 'c_fill,w_450,h_450,q_auto,f_webp' // Fast connections - good quality
     },
-    
-    // Medium sizes for larger displays
+
+    // Medium sizes for larger displays (reduced from previous)
     medium: {
-        slow: 'c_fill,w_600,h_600,q_auto:low,f_auto',
-        normal: 'c_fill,w_800,h_800,q_auto,f_auto',
-        fast: 'c_fill,w_1000,h_1000,q_auto:best,f_auto'
+        slow: 'c_fill,w_500,h_500,q_auto:low,f_webp',
+        normal: 'c_fill,w_700,h_700,q_auto,f_webp',
+        fast: 'c_fill,w_900,h_900,q_auto:good,f_webp'
     },
-    
+
     // Full size for lightbox
     full: {
-        slow: 'c_fill,w_1200,h_1200,q_auto:good,f_auto',
-        normal: 'c_fill,w_1600,h_1600,q_auto:best,f_auto',
-        fast: 'c_fill,w_2000,h_2000,q_auto:best,f_auto'
+        slow: 'c_fill,w_1000,h_1000,q_auto:good,f_webp',
+        normal: 'c_fill,w_1400,h_1400,q_auto:good,f_webp',
+        fast: 'c_fill,w_1800,h_1800,q_auto:best,f_webp'
     }
 };
 
@@ -362,21 +369,21 @@ window.generateCloudinaryUrl = generateCloudinaryUrl;
 
 /**
  * Generate srcset for responsive images
- * Optimized based on connection speed
+ * Optimized based on connection speed - reduced sizes for faster loading
  *
  * @param {string} originalUrl - Original Cloudinary URL
  * @returns {string} srcset attribute value
  */
 function generateSrcset(originalUrl) {
     if (NetworkInfo.isSlowConnection()) {
-        // For slow connections, use smaller sizes
-        return `${generateCloudinaryUrl(originalUrl, 'thumbnail')} 300w, ${generateCloudinaryUrl(originalUrl, 'medium')} 600w`;
+        // For slow connections, skip srcset entirely - single size only
+        return '';
     } else if (NetworkInfo.isFastConnection()) {
-        // For fast connections, use larger sizes
-        return `${generateCloudinaryUrl(originalUrl, 'thumbnail')} 500w, ${generateCloudinaryUrl(originalUrl, 'medium')} 1000w`;
+        // For fast connections, use two sizes
+        return `${generateCloudinaryUrl(originalUrl, 'thumbnail')} 450w, ${generateCloudinaryUrl(originalUrl, 'medium')} 900w`;
     } else {
-        // Normal connection
-        return `${generateCloudinaryUrl(originalUrl, 'thumbnail')} 400w, ${generateCloudinaryUrl(originalUrl, 'medium')} 800w`;
+        // Normal connection - two sizes
+        return `${generateCloudinaryUrl(originalUrl, 'thumbnail')} 350w, ${generateCloudinaryUrl(originalUrl, 'medium')} 700w`;
     }
 }
 
@@ -403,7 +410,8 @@ async function fetchGalleryImages(cursor = null, useCache = true) {
 
         // Build API URL with pagination params
         const url = new URL(API_ENDPOINTS.GALLERY_IMAGES);
-        url.searchParams.set('limit', '12');
+        // Reduced initial load from 12 to 8 for faster first paint
+        url.searchParams.set('limit', '8');
         if (cursor) {
             url.searchParams.set('cursor', cursor);
         }
@@ -463,7 +471,7 @@ async function fetchGalleryImages(cursor = null, useCache = true) {
  */
 function createGalleryItem(image, index) {
     const item = document.createElement('div');
-    item.className = 'gallery-item';
+    item.className = 'gallery-item loading'; // Add loading class for shimmer effect
     item.dataset.imageIndex = index;
 
     // Create image wrapper
@@ -482,79 +490,45 @@ function createGalleryItem(image, index) {
     img.dataset.originalUrl = image.cloudinary_url;
     img.dataset.thumbnailUrl = thumbnailUrl;
     
-    // Responsive images with srcset
-    img.srcset = generateSrcset(image.cloudinary_url);
-    img.sizes = '(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw';
+    // Responsive images with srcset (skip on slow connections)
+    const srcset = generateSrcset(image.cloudinary_url);
+    if (srcset) {
+        img.srcset = srcset;
+        img.sizes = '(min-width: 1024px) 350px, (min-width: 768px) 50vw, 100vw';
+    }
     img.alt = image.caption || `Makayla Moon Gallery ${index + 1}`;
-    
+
     // Set aspect ratio to prevent layout shift (1:1 for gallery items)
     img.style.aspectRatio = '1 / 1';
     img.style.objectFit = 'cover';
-    
-    // Optimize loading strategy based on position and connection
-    const isAboveFold = index < 6;
-    const isSlowConnection = NetworkInfo.isSlowConnection();
-    
-    if (isAboveFold && !isSlowConnection) {
-        // Eager load above-the-fold images on good connections
+
+    // Add explicit decode hint for better performance
+    img.decoding = 'async';
+
+    // Optimize loading strategy - only first 3 images eager on good connections
+    const isAboveFold = index < 3; // Reduced from 6 to 3
+
+    if (isAboveFold) {
+        // Eager load above-the-fold images - direct load, no duplicate Image objects
         img.loading = 'eager';
         img.fetchPriority = 'high';
         img.decoding = 'async';
-        
-        // Preload thumbnail immediately
-        const preloadImg = new Image();
-        preloadImg.onload = () => {
-            // Smooth transition from blur to thumbnail
-            img.style.transition = 'opacity 0.3s ease-in-out';
-            img.src = thumbnailUrl;
-            img.dataset.loaded = 'true';
-        };
-        preloadImg.onerror = () => {
-            // If preload fails, still try to load on next frame
-            requestAnimationFrame(() => {
-                img.src = thumbnailUrl;
-            });
-        };
-        preloadImg.src = thumbnailUrl;
-    } else if (isAboveFold && isSlowConnection) {
-        // On slow connections, even above-fold images should be lazy
-        // but with higher priority
-        img.loading = 'lazy';
-        img.fetchPriority = 'high';
-        img.decoding = 'async';
-        
-        // Use requestIdleCallback if available, otherwise setTimeout
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(() => {
-                const tempImg = new Image();
-                tempImg.onload = () => {
-                    img.src = thumbnailUrl;
-                    img.dataset.loaded = 'true';
-                };
-                tempImg.src = thumbnailUrl;
-            }, { timeout: 1000 });
-        } else {
-            setTimeout(() => {
-                const tempImg = new Image();
-                tempImg.onload = () => {
-                    img.src = thumbnailUrl;
-                    img.dataset.loaded = 'true';
-                };
-                tempImg.src = thumbnailUrl;
-            }, 100);
-        }
+
+        // Directly set source - browser will handle caching efficiently
+        img.style.transition = 'opacity 0.3s ease-in-out';
+        img.src = thumbnailUrl;
     } else {
         // Lazy load below-the-fold images
         img.loading = 'lazy';
         img.fetchPriority = 'low';
         img.decoding = 'async';
-        
+
         // Use shared Intersection Observer for better performance
         const observer = initLazyLoadObserver();
         if (observer) {
             observer.observe(img);
         } else {
-            // Fallback: load on next frame
+            // Fallback: direct load on next frame
             requestAnimationFrame(() => {
                 img.src = thumbnailUrl;
             });
@@ -565,6 +539,14 @@ function createGalleryItem(image, index) {
     // Use aspect-ratio CSS property (already set above) and width/height for older browsers
     img.width = 400;
     img.height = 400;
+
+    // Add load listener to remove shimmer when native lazy loading completes
+    img.addEventListener('load', function() {
+        if (this.src !== blurPlaceholder && this.dataset.loaded !== 'true') {
+            this.dataset.loaded = 'true';
+            item.classList.remove('loading');
+        }
+    });
 
     // Enhanced error handling with retry logic
     img.addEventListener('error', function() {
@@ -578,6 +560,8 @@ function createGalleryItem(image, index) {
                     img.src = thumbnailUrl;
                     img.dataset.loaded = 'true';
                     imageLoadingState.set(image.cloudinary_url, { loading: false, loaded: true, retries: state.retries });
+                    // Remove loading shimmer on successful retry
+                    item.classList.remove('loading');
                 };
                 retryImg.onerror = () => {
                     // Final failure
@@ -588,6 +572,8 @@ function createGalleryItem(image, index) {
                     errorMsg.textContent = 'Failed to load image';
                     imageWrapper.appendChild(errorMsg);
                     imageLoadingState.delete(image.cloudinary_url);
+                    // Remove loading shimmer on final failure
+                    item.classList.remove('loading');
                 };
                 retryImg.src = thumbnailUrl;
             }, 1000 * state.retries);
@@ -600,6 +586,8 @@ function createGalleryItem(image, index) {
             errorMsg.textContent = 'Failed to load image';
             imageWrapper.appendChild(errorMsg);
             imageLoadingState.delete(image.cloudinary_url);
+            // Remove loading shimmer on error
+            item.classList.remove('loading');
         }
     });
 
@@ -756,11 +744,13 @@ function renderImages() {
     // Clear grid completely (including load more button)
     galleryGrid.innerHTML = '';
 
-    // Create and append grid items
+    // Create and batch append grid items using DocumentFragment for single reflow
+    const fragment = document.createDocumentFragment();
     galleryState.allImages.forEach((image, index) => {
         const item = createGalleryItem(image, index);
-        galleryGrid.appendChild(item);
+        fragment.appendChild(item);
     });
+    galleryGrid.appendChild(fragment);
 }
 
 /**
