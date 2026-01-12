@@ -1429,12 +1429,12 @@ button.btn {
 
 /* Responsive Card Modifications */
 @media (max-width: 768px) {
-    /* Base card adjustments for mobile - fluid padding scaling */
+    /* Base card adjustments for mobile - optimized padding for space efficiency */
     .card,
     .platform-card,
     .service-card,
     .stat-card {
-        padding: clamp(0.875rem, 3vw, 1.25rem);
+        padding: clamp(0.75rem, 2.5vw, 1rem); /* Slightly tighter padding: 12-16px */
     }
     
     .card-horizontal {
@@ -1446,11 +1446,11 @@ button.btn {
     }
     
     .card-large {
-        padding: clamp(1rem, 3.5vw, 1.25rem);
+        padding: clamp(0.875rem, 3vw, 1rem); /* Optimized for mobile */
     }
     
     .card-small {
-        padding: clamp(0.625rem, 2.5vw, 0.75rem);
+        padding: clamp(0.5rem, 2vw, 0.625rem); /* Optimized for mobile */
     }
     
     /* Card typography scaling for mobile - fluid font sizes */
@@ -1489,8 +1489,8 @@ button.btn {
     
     /* Etiquette card specific scaling (uses larger padding) */
     .etiquette-section-card {
-        padding: clamp(1rem, 4vw, calc(var(--spacing-lg) * 1.5));
-        margin-bottom: clamp(1.5rem, 5vw, calc(var(--spacing-xl) * 1.2));
+        padding: clamp(0.875rem, 3vw, 1.25rem); /* Optimized padding for mobile space */
+        margin-bottom: clamp(1rem, 3.5vw, 1.5rem); /* Tighter margin */
     }
     
     .etiquette-section-title {
@@ -3030,6 +3030,11 @@ button.btn {
 }
 
 @media (max-width: 768px) {
+    /* Reduce container padding on mobile for better space usage */
+    .container {
+        padding: 0 clamp(0.75rem, 3vw, 1rem); /* Tighter padding: 12-16px instead of 38.4px */
+    }
+    
     .nav-menu {
         position: fixed;
         top: 0;
@@ -3065,7 +3070,7 @@ button.btn {
     
     .platform-grid {
         grid-template-columns: 1fr;
-        gap: clamp(1rem, 4vw, calc(var(--spacing-lg) * 1.2)); /* Fluid spacing on mobile */
+        gap: clamp(0.875rem, 3vw, 1rem); /* Tighter spacing for better space usage */
     }
     
     /* Platform card scaling for mobile */
@@ -3170,7 +3175,7 @@ button.btn {
     }
     
     .platform-grid {
-        gap: clamp(0.875rem, 3.5vw, var(--spacing-md)); /* Fluid spacing on small mobile */
+        gap: clamp(0.75rem, 2.5vw, 0.875rem); /* Tighter spacing on small mobile */
     }
     
     /* Platform card additional scaling for very small screens */
@@ -3656,7 +3661,7 @@ button.btn {
 @media (max-width: 768px) {
     .services-grid {
         grid-template-columns: 1fr;
-        gap: clamp(1rem, 3.5vw, var(--spacing-md));
+        gap: clamp(0.875rem, 2.5vw, 0.875rem); /* Tighter gap: 14px for better space usage */
     }
 
     .service-card-large {
