@@ -3000,7 +3000,7 @@ button.btn {
     color: var(--white-90);
     line-height: 1.8;
     font-size: 1.05rem;
-    text-align: center;
+    text-align: left; /* Match services page alignment */
 }
 
 .etiquette-paragraph-top {
@@ -3009,7 +3009,7 @@ button.btn {
     color: var(--white-90);
     line-height: 1.8;
     font-size: 1.05rem;
-    text-align: center;
+    text-align: left; /* Match services page alignment */
 }
 
 /* ===========================
