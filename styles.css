@@ -2973,7 +2973,14 @@ button.btn {
     position: relative;
     box-shadow: 0 4px 20px var(--black-30);
     transition: all var(--transition-normal);
-    text-align: left; /* Match services page - left aligned */
+    text-align: left !important; /* Match services page - left aligned, force override */
+}
+
+/* Ensure ALL text elements inside etiquette cards are left-aligned */
+.etiquette-section-card p,
+.etiquette-section-card .etiquette-paragraph,
+.etiquette-section-card .etiquette-paragraph-top {
+    text-align: left !important; /* Force left alignment to match services page */
 }
 
 /* Add extra space between header and first card */
