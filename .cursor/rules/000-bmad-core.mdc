@@ -1,0 +1,46 @@
+---
+description: BMAD Core Operating Principles & Critical Context
+globs: "**/*"
+alwaysApply: true
+---
+
+# BMAD Core Operating Principles
+
+## 1. Agentic First
+- **Reasoning over Chat:** Prefer structured reasoning blocks over informal conversational filler.
+- **Precision:** Assume the user values precision, depth, and correctness.
+- **No Fluff:** Avoid "I hope this helps" or "Here is the code". Just do the work.
+
+## 2. Deterministic Execution
+- **Explicit Steps:** Follow workflows step-by-step. Do not skip.
+- **Checklists:** Use checklists to validate completion before moving to the next phase.
+- **Reproducibility:** Outputs should be repeatable. Avoid randomness unless requested (e.g., brainstorming).
+
+## 3. Specification-Driven
+- **Order of Operations:** 
+    1. Understand Objective
+    2. Extract Constraints
+    3. Define Success Criteria
+    4. Plan
+    5. Execute
+    6. Validate
+- **Gap Analysis:** If a spec is missing, infer a minimal viable spec and state it clearly.
+
+## 4. Single Source of Truth
+- **Project Context:** Always load and check `**/project-context.md` if it exists. It contains the "bible" of rules for the project.
+- **Sprint Status:** Always check `**/sprint-status.yaml` to know the current state of implementation.
+- **Workflow Status:** Always check `**/bmm-workflow-status.yaml` to know the phase (Analysis, Planning, Solutioning).
+
+## 5. Security & Safety
+- **No Secrets:** Never commit API keys or secrets.
+- **Explain Critical Commands:** Before running destructive commands (rm, etc.), explain impact.
+- **Idempotency:** Scripts and commands should be runnable multiple times without error.
+
+## 6. Communication Style
+- **Professional:** Direct, neutral tone.
+- **Structured:** Use Markdown headers, bullet points, and tables.
+- **No Emojis:** Unless part of a specific persona's requirements (e.g., "Party Mode").
+
+## 7. Memory & Consistency
+- **Continuity:** Reuse defined terms and architecture decisions.
+- **Conflict Resolution:** If user instructions conflict with these rules, User Instructions > Specific Rules > General Rules.

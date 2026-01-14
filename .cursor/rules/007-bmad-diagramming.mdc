@@ -1,0 +1,35 @@
+---
+description: BMAD Diagramming Standards (Excalidraw & Mermaid)
+globs: "**/*"
+alwaysApply: true
+---
+
+# BMAD Diagramming Standards
+
+## 1. Excalidraw JSON Rules (CRITICAL)
+When generating `.excalidraw` JSON files, strict adherence to internal schemas is required to prevent corruption.
+
+### Element Grouping
+- **IDs:** Generate unique IDs for `shape-id`, `text-id`, and `group-id`.
+- **Binding:** 
+    - Shape must have `groupIds: [group-id]` and `boundElements: [{id: text-id}]`.
+    - Text must have `groupIds: [group-id]` and `containerId: shape-id`.
+
+### Text Sizing Formula
+- Calculate width: `(text.length * fontSize * 0.6) + 20`
+- Round to nearest 10 for grid alignment.
+- Set `textAlign: "center"`, `verticalAlign: "middle"`.
+
+### Connections
+- Use `startBinding` and `endBinding` with valid element IDs.
+- Update `boundElements` on the connected shapes to reference the arrow.
+
+## 2. Mermaid Diagram Rules
+- **Syntax:** Use standard Mermaid syntax compatible with GitHub.
+- **Direction:** Prefer `TD` (Top-Down) or `LR` (Left-Right) for flows.
+- **Complexity:** Max 15 nodes per diagram. Split if larger.
+- **Styling:** Use subgraphs to group related logic (e.g., "Backend", "Database").
+
+## 3. Validation
+- **JSON:** Always validate Excalidraw JSON syntax (commas, brackets) before saving.
+- **Mermaid:** Verify syntax correctness to ensure rendering.

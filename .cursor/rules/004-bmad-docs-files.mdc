@@ -1,0 +1,46 @@
+---
+description: BMAD Documentation & File Convention Rules
+globs: "**/*"
+alwaysApply: true
+---
+
+# BMAD Documentation & File Conventions
+
+## 1. Documentation Style
+- **Standard:** CommonMark Markdown.
+- **Diagrams:** Use Mermaid for flows, sequence, and architecture diagrams.
+- **Tone:** Professional, direct, active voice.
+- **Structure:** Hierarchy (H1 -> H2 -> H3). No skipping levels.
+
+## 2. Forbidden Content
+- **Time Estimates:** NEVER include hours, days, or completion dates. Development speed varies.
+- **Filler:** No "In order to", "It is important to note".
+- **Ambiguity:** No "fast", "easy", "user-friendly". Use measurable metrics.
+
+## 3. File Naming
+- **Kebab-case:** `user-authentication.ts`, `sprint-status.yaml`.
+- **Prefixes:** `step-01-`, `step-v-01-` for workflow steps.
+- **Locations:**
+    - Source: `src/`
+    - Tests: `tests/`
+    - Docs: `docs/` or `_bmad-output/`
+
+## 4. Frontmatter
+- **Tracking:** Use YAML frontmatter for state tracking in markdown docs.
+    ```yaml
+    ---
+    status: in-progress
+    stepsCompleted: [1, 2]
+    ---
+    ```
+- **Updates:** Always update frontmatter when modifying a document state.
+
+## 5. Artifact Management
+- **Output Folder:** Respect the `output_folder` config (default `_bmad-output`).
+- **Archive:** Move stale documents to `archive/` instead of deleting if history is needed.
+- **Sharding:** For large docs, split into folder `doc-name/` with `index.md` and section files.
+
+## 6. Templates
+- **Usage:** Always use provided templates (e.g., `prd-template.md`).
+- **Placeholders:** Replace all `{{variable}}` placeholders.
+- **Validation:** Scan for remaining placeholders before finalizing.

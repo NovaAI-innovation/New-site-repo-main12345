@@ -1,0 +1,41 @@
+---
+description: BMAD Test Architecture (TEA) Protocols & Gates
+globs: "**/*"
+alwaysApply: true
+---
+
+# BMAD Test Architecture (TEA) Protocols
+
+## 1. Quality Gate Decision Matrix
+Decisions are **deterministic**, not subjective. Use this matrix for "Gate" workflows:
+
+| Decision | Criteria | Action |
+| :--- | :--- | :--- |
+| **PASS** | P0 Coverage=100%, P1 Coverage≥90%, All Critical NFRs Pass | Proceed to Deploy |
+| **CONCERNS** | P1 Coverage<90%, Minor NFR gaps, Workarounds available | Deploy with Monitoring |
+| **FAIL** | P0 Gap, Security Issue, Critical NFR Fail | **BLOCK DEPLOYMENT** |
+| **WAIVED** | Business approval for FAIL scenario (Time-boxed) | Deploy with Mitigation |
+
+## 2. Risk Assessment (NFRs)
+Assess Non-Functional Requirements using the **Probability x Impact** (1-9) scale:
+- **Score 9 (Critical):** Blocker. Must fix immediately.
+- **Score 6-8 (High):** Mitigation required before release.
+- **Score 1-5 (Low/Med):** Monitor or Document.
+
+## 3. Traceability
+- **Requirement:** Every test must trace back to a Requirement (Story/AC) or Risk.
+- **Structure:**
+    - `1.3-E2E-001` (Story 1.3, E2E level, Test 01)
+    - **Orphan Test:** A test with no parent requirement is technical debt.
+    - **Gap:** A requirement with no linked test is a risk.
+
+## 4. Test Levels Framework
+- **Unit:** Logic, Algorithms, Edge Cases. (Fastest)
+- **Component:** UI States, Interactions, Accessibility. (Fast)
+- **API:** Service Contracts, Data Integrity, Business Logic. (Stable)
+- **E2E:** Critical User Journeys, Multi-system integration. (Slowest, Critical)
+- **Rule:** Do not duplicate coverage. If covered in Unit, don't repeat in E2E unless critical path.
+
+## 5. Burn-In Protocol
+- **New Tests:** Run 10 iterations locally before committing to CI.
+- **Flakiness:** Any failure in 10 runs = FLAKY. Do not merge.

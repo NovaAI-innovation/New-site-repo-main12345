@@ -1,0 +1,25 @@
+---
+description: BMAD Terminal Safeguards & No-Chat Protocol
+globs: "**/*"
+alwaysApply: true
+---
+
+# BMAD Terminal Safeguards
+
+## 1. No Terminal Chat (CRITICAL)
+- **Rule:** NEVER use terminal tools (e.g., `run_shell_command`) to send plain English messages or conversational text to the user.
+- **Forbidden:** No `echo "Hello User"`, `echo "Step 1 complete"`, or entering plain text into the shell input.
+- **Interface Separation:** All natural language communication, status updates, and facilitation dialogue MUST happen through the standard Chat/LLM response interface.
+
+## 2. Executable Only
+- **Rule:** The terminal is strictly reserved for valid, executable system commands (PowerShell).
+- **Validation:** Before running a command, verify it is a functional instruction (e.g., `git status`, `npm test`, `mkdir`). 
+- **No Filler:** Do not use `echo` to "log" progress within a command string unless it is part of a script's functional output.
+
+## 3. Tool usage discipline
+- **One Sentence Rule:** Per system instructions, provide exactly one short, concise natural language sentence in the chat before calling a terminal tool.
+- **Silence:** Do not use the terminal to "think out loud."
+
+## 4. Error Handling
+- **Non-Interactive:** Prefer non-interactive flags (e.g., `-y`, `--force`) to prevent the shell from hanging.
+- **Redirection:** If a command is expected to be verbose, redirect output to a temp file as per standard guidelines instead of flooding the terminal with text.

@@ -1,0 +1,34 @@
+---
+description: BMAD Quick Flow Standards & Exceptions
+globs: "**/*"
+alwaysApply: true
+---
+
+# BMAD Quick Flow Standards
+
+## 1. The Quick Flow Exception
+- **Definition:** "Quick Flow" is a permitted exception to the standard `001-bmad-workflow` phases.
+- **Agent:** `quick-flow-solo-dev` (Barry).
+- **Scope:** Small features, bug fixes, prototypes, or "spikes".
+- **Bypass:** Skips PRD, Architecture, and Epics phases.
+
+## 2. Quick Flow Artifacts
+Instead of heavy planning docs, Quick Flow relies on:
+- **Tech Spec:** A lightweight `tech-spec.md` (or similar) that combines requirements and implementation plan.
+- **WIP File:** Maintains a `tech-spec-wip.md` during active development.
+
+## 3. Quick Flow Operating Rules
+- **No Bureaucracy:** Do not ask for user personas or market research unless explicitly requested.
+- **Code First:** Prioritize getting to code. "Specs are for building, not bureaucracy."
+- **Self-Contained:** The agent handles the full lifecycle (Spec -> Code -> Test) autonomously.
+
+## 4. Transitioning to Standard Flow
+- **Escalation:** If a Quick Flow task grows too large (>1 week effort or touches >5 major systems), recommend transitioning to the Standard Method (Workflow Init).
+- **Artifact Handover:** The `tech-spec.md` serves as the seed for a future `PRD` or `Architecture` doc if the project upgrades.
+
+## 5. Execution Steps
+1. **Understand:** Analyze requirement delta.
+2. **Investigate:** Map technical constraints (read code first).
+3. **Spec:** Generate a lean implementation plan (files, tasks, AC).
+4. **Execute:** Red-Green-Refactor loop.
+5. **Verify:** Self-correction and test validation.

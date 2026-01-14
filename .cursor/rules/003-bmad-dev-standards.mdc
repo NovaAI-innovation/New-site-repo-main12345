@@ -1,0 +1,48 @@
+---
+description: BMAD Development Standards (Coding, Testing, Implementation)
+globs: "**/*"
+alwaysApply: true
+---
+
+# BMAD Development & Testing Standards
+
+## 1. ATDD (Acceptance Test-Driven Development)
+- **Fail First:** You must generate a FAILING acceptance test (Red) before writing implementation code.
+- **Verify Red:** Run the test to confirm it fails for the expected reason.
+- **Green:** Implement minimal code to pass the test.
+- **Refactor:** Clean up code after passing.
+
+## 2. Test Quality
+- **Selectors:** Use `data-testid` > ARIA roles > Text content. Avoid CSS classes/XPath.
+- **Isolation:** Tests must self-clean data. No shared state.
+- **Determinism:** No `sleep()` or hard waits. Use `waitForResponse`, `waitForSelector`.
+- **Network-First:** Intercept network routes BEFORE triggering navigation actions to prevent race conditions.
+
+## 3. Implementation Rules
+- **Story Alignment:** Only implement what is in the Story/Task. No gold-plating.
+- **Architecture Compliance:** Follow patterns defined in `architecture.md`.
+- **Library Usage:** Use libraries defined in `tech-stack` rules. Do not introduce new deps without check.
+
+## 4. Commit Strategy
+- **Atomic:** One task = one commit (conceptually).
+- **Verification:** Run tests before marking a task complete.
+- **Documentation:** Update the `Dev Notes` and `File List` in the Story Markdown file immediately.
+
+## 5. Test Prioritization
+- **P0 (Critical):** Blocks release. Must pass 100%. (e.g., Auth, Payments).
+- **P1 (High):** Blocks PR. (e.g., Core features).
+- **P2 (Medium):** Nightly run. (e.g., Edge cases).
+- **P3 (Low):** Optional/Manual.
+
+## 6. Code Review (Adversarial)
+- **Challenge Claims:** Verify `[x]` tasks are actually done.
+- **Evidence:** Check git diff vs story `File List`.
+- **Severity:**
+    - Critical: Fake completion, broken P0.
+    - High: Missing AC, Architecture violation.
+    - Medium: Poor patterns, low coverage.
+
+## 7. NFRs (Non-Functional Requirements)
+- **Security:** Sanitize inputs, enforce authz.
+- **Performance:** Respect thresholds (e.g., p95 < 500ms).
+- **Reliability:** Handle errors gracefully (retries, fallbacks).

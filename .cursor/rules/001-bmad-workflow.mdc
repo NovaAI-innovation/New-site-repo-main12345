@@ -1,0 +1,40 @@
+---
+description: BMAD Workflow Phases & Status Management
+globs: "**/*"
+alwaysApply: true
+---
+
+# BMAD Workflow & Status Rules
+
+## 1. Phase transitions
+Respect the strict order of BMAD phases:
+1. **Analysis:** Brainstorming -> Research -> Product Brief.
+2. **Planning:** Product Brief -> PRD -> UX Design.
+3. **Solutioning:** Architecture -> Epics & Stories -> Implementation Readiness.
+4. **Implementation:** Sprint Planning -> Dev Story -> Code Review.
+
+## 2. Status File Management
+- **Read First:** Before starting work, read `sprint-status.yaml` or `bmm-workflow-status.yaml`.
+- **Update Immediately:** Upon completing a workflow step, update the corresponding status file.
+- **Atomic Updates:** Do not leave status files in inconsistent states.
+
+## 3. Workflow specific Rules
+- **PRD:** Must include Functional Requirements (FRs), Non-Functional Requirements (NFRs), and User Journeys.
+- **Architecture:** Must define Tech Stack, Patterns, and Directory Structure before implementation.
+- **Epics:** Must be user-value focused, not technical tasks. Independent of each other.
+- **Stories:** Must have Acceptance Criteria (AC) in Gherkin (Given/When/Then) format.
+
+## 4. Validation Gates
+- **Gate 1 (Planning):** PRD must be validated against `prd-purpose.md` standards.
+- **Gate 2 (Solutioning):** Architecture must support all PRD FRs/NFRs.
+- **Gate 3 (Readiness):** "Implementation Readiness" workflow must pass before code is written.
+- **Gate 4 (Code):** "Senior Developer Review" (Adversarial) must pass before story is "Done".
+
+## 5. File Location Conventions
+- **Planning Artifacts:** Store in `_bmad-output/planning-artifacts/` (or configured location).
+- **Implementation Artifacts:** Store in `_bmad-output/implementation-artifacts/`.
+- **Knowledge Base:** Reference `_bmad/bmm/testarch/knowledge/` for patterns.
+
+## 6. Continuation
+- **Resume:** When resuming a workflow, check `stepsCompleted` frontmatter in the target document.
+- **No Overwrite:** Use append-only patterns for logs and journals unless explicitly editing a living document.
